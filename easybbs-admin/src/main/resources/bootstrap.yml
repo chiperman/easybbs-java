@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 101.34.82.202:8848
+        namespace: bbs-dev
+        group: bbs-admin
+      config:
+        server-addr: 101.34.82.202:8848
+        namespace: bbs-dev
+        prefix: application
+        file-extension: properties
+        group: bbs-admin
+  application:
+    name: bbs-admin
