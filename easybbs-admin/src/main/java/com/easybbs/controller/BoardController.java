@@ -1,12 +1,12 @@
 package com.easybbs.controller;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TestController {
-    @RequestMapping("/test")
-    public String test() {
+@RequestMapping("/board")
+public class BoardController {
+    @RequestMapping("/loadBoard")
+    public String loadBoard() {
         return "hello";
     }
 }

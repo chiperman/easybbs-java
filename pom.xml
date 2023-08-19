@@ -31,6 +31,7 @@
 
         <springboot.version>2.6.1</springboot.version>
         <mybatis.version>2.2.1</mybatis.version>
+        <mybatisplus.version>3.2.0</mybatisplus.version>
         <logback.version>1.2.10</logback.version>
         <mysql.version>8.0.23</mysql.version>
         <aspectjweaver.version>1.9.4</aspectjweaver.version>
@@ -48,6 +49,13 @@
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.version}</version>
+            </dependency>
+
+            <!--Mybatis-plus-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatisplus.version}</version>
             </dependency>
 
             <!--邮件发送-->
