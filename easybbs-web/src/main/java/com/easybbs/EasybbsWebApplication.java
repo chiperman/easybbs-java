@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(scanBasePackages = {"com.easybbs"})
-@MapperScan(basePackages = {"com.easybbs.mappers"})
+@MapperScan(basePackages = {"com.easybbs.mapper"})
 @EnableTransactionManagement
 public class EasybbsWebApplication {
     public static void main(String[] args) {
