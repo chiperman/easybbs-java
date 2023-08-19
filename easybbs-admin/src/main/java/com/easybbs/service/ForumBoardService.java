@@ -1,7 +1,8 @@
 package com.easybbs.service;
 
 import com.easybbs.entity.ForumBoard;
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.stereotype.Service;
 
 /**
 * @author Master-Z

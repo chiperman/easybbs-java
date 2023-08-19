@@ -1,6 +1,7 @@
 package com.easybbs.service.impl;
 
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easybbs.entity.ForumBoard;
 import com.easybbs.service.ForumBoardService;
 import com.easybbs.mapper.ForumBoardMapper;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 * @createDate 2023-08-19 16:20:54
 */
 @Service
-public class ForumBoardServiceImpl extends ServiceImpl<ForumBoardMapper, ForumBoard>
-implements ForumBoardService{
+public class ForumBoardServiceImpl extends ServiceImpl<ForumBoardMapper, ForumBoard> implements ForumBoardService{
 
 }

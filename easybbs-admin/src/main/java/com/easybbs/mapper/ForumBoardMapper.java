@@ -1,7 +1,8 @@
 package com.easybbs.mapper;
 
 import com.easybbs.entity.ForumBoard;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author Master-Z
@@ -9,7 +10,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 * @createDate 2023-08-19 16:20:54
 * @Entity com.easybbs.entity.ForumBoard
 */
+@Mapper
 public interface ForumBoardMapper extends BaseMapper<ForumBoard> {
-
 
 }
