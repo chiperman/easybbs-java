@@ -30,7 +30,7 @@
         <prudent>false</prudent>
     </appender>
 
-    <root level="${log.root.level}">
+    <root level="INFO">
         <appender-ref ref="stdot"/>
         <appender-ref ref="file"/>
     </root>
