@@ -22,7 +22,6 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserInfoMapper mapper;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("/loadUserList")
     public MyResponse<PageResult<UserInfo>> getUserList(HttpServletRequest request, @RequestBody UserQueryVo vo) {

@@ -1,7 +1,5 @@
 package com.easybbs.aop;
 
-import com.easybbs.controller.UserController;
-import com.mysql.cj.log.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;

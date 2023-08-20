@@ -2,6 +2,7 @@ package com.easybbs.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,6 +13,7 @@ import com.easybbs.mapper.ForumCommentMapper;
 import com.easybbs.service.ForumArticleService;
 import com.easybbs.mapper.ForumArticleMapper;
 import com.easybbs.service.ForumCommentService;
+import com.easybbs.vo.ArticleBoardVo;
 import com.easybbs.vo.ArticleQueryVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -88,6 +90,15 @@ public class ForumArticleServiceImpl extends ServiceImpl<ForumArticleMapper, For
         return result;
     }
 
+    @Override
+    public Boolean updateArticlesBoard(ArticleBoardVo vo) {
+        UpdateWrapper<ForumArticle> wrapper = new UpdateWrapper<>();
+        wrapper.eq("article_id", vo.getArticleId());
+        wrapper.set("board_id", vo.getBoardId());
+        wrapper.set("p_board_id", vo.getPboardId());
+        int result = forumArticleMapper.update(null, wrapper);
+        return result == 1;
+    }
 
     private void setChildComment(List<ArticleCommentDto> comments) {
         comments.forEach(comment -> {

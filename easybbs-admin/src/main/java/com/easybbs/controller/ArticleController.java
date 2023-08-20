@@ -6,7 +6,9 @@ import com.easybbs.dto.ArticleCommentDto;
 import com.easybbs.entity.ForumArticle;
 import com.easybbs.service.ForumArticleService;
 import com.easybbs.service.ForumCommentService;
+import com.easybbs.vo.ArticleBoardVo;
 import com.easybbs.vo.ArticleQueryVo;
+import com.easybbs.vo.UserUpdateVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import response.MyResponse;
 import response.PageResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -23,7 +26,6 @@ import java.util.List;
 public class ArticleController {
     @Autowired
     private ForumArticleService articleService;
-
     @Autowired
     private ForumCommentService commentService;
     @RequestMapping("/loadArticle")
@@ -46,6 +48,22 @@ public class ArticleController {
             setResponseSuccess(response);
         }
 
+        return response;
+    }
+
+    @RequestMapping("/updateBoard")
+    public MyResponse updateBoard(@RequestBody ArticleBoardVo vo) {
+        Boolean success = articleService.updateArticlesBoard(vo);
+        MyResponse response = new MyResponse();
+        if (!success) {
+            response.setStatus(EHttpCode.FAIL.getStatus());
+            response.setCode(EHttpCode.FAIL.getCode());
+            response.setInfo(EHttpCode.FAIL.getInfo());
+        } else {
+            response.setStatus(EHttpCode.SUCCESS.getStatus());
+            response.setCode(EHttpCode.SUCCESS.getCode());
+            response.setInfo(EHttpCode.SUCCESS.getInfo());
+        }
         return response;
     }
 
