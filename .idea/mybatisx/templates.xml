@@ -5,9 +5,9 @@
       <TemplateContext>
         <option name="generateConfig">
           <GenerateConfig>
-            <option name="annotationType" value="NONE" />
-            <option name="basePackage" value="generator" />
-            <option name="basePath" value="src/main/java/com/easybbs" />
+            <option name="annotationType" value="MYBATIS_PLUS3" />
+            <option name="basePackage" value="com.easybbs" />
+            <option name="basePath" value="src/main/java" />
             <option name="classNameStrategy" value="camel" />
             <option name="encoding" value="UTF-8" />
             <option name="extraClassSuffix" value="" />
@@ -16,7 +16,7 @@
             <option name="ignoreTablePrefix" value="" />
             <option name="ignoreTableSuffix" value="" />
             <option name="moduleName" value="easybbs-admin" />
-            <option name="modulePath" value="$PROJECT_DIR$/easybbs-common" />
+            <option name="modulePath" value="$PROJECT_DIR$/easybbs-admin" />
             <option name="moduleUIInfoList">
               <list>
                 <ModuleInfoGo>
@@ -26,8 +26,8 @@
                   <option name="encoding" value="${domain.encoding}" />
                   <option name="fileName" value="${domain.fileName}Mapper" />
                   <option name="fileNameWithSuffix" value="${domain.fileName}Mapper.java" />
-                  <option name="modulePath" value="$PROJECT_DIR$/easybbs-common" />
-                  <option name="packageName" value="${domain.basePackage}.mapper" />
+                  <option name="modulePath" value="$PROJECT_DIR$/easybbs-admin" />
+                  <option name="packageName" value="com.easybbs.mapper" />
                 </ModuleInfoGo>
                 <ModuleInfoGo>
                   <option name="basePath" value="src/main/resources" />
@@ -36,8 +36,8 @@
                   <option name="encoding" value="${domain.encoding}" />
                   <option name="fileName" value="${domain.fileName}Mapper" />
                   <option name="fileNameWithSuffix" value="${domain.fileName}Mapper.xml" />
-                  <option name="modulePath" value="$PROJECT_DIR$/easybbs-common" />
-                  <option name="packageName" value="mapper" />
+                  <option name="modulePath" value="$PROJECT_DIR$/easybbs-admin" />
+                  <option name="packageName" value="com.easybbs.mapper" />
                 </ModuleInfoGo>
                 <ModuleInfoGo>
                   <option name="basePath" value="${domain.basePath}" />
@@ -46,7 +46,7 @@
                   <option name="encoding" value="${domain.encoding}" />
                   <option name="fileName" value="${domain.fileName}ServiceImpl" />
                   <option name="fileNameWithSuffix" value="${domain.fileName}ServiceImpl.java" />
-                  <option name="modulePath" value="$PROJECT_DIR$/easybbs-common" />
+                  <option name="modulePath" value="$PROJECT_DIR$/easybbs-admin" />
                   <option name="packageName" value="${domain.basePackage}.service.impl" />
                 </ModuleInfoGo>
                 <ModuleInfoGo>
@@ -56,31 +56,30 @@
                   <option name="encoding" value="${domain.encoding}" />
                   <option name="fileName" value="${domain.fileName}Service" />
                   <option name="fileNameWithSuffix" value="${domain.fileName}Service.java" />
-                  <option name="modulePath" value="$PROJECT_DIR$/easybbs-common" />
+                  <option name="modulePath" value="$PROJECT_DIR$/easybbs-admin" />
                   <option name="packageName" value="${domain.basePackage}.service" />
                 </ModuleInfoGo>
               </list>
             </option>
-            <option name="needToStringHashcodeEquals" value="true" />
             <option name="needsComment" value="true" />
             <option name="needsModel" value="true" />
-            <option name="relativePackage" value="domain" />
+            <option name="relativePackage" value="entity" />
             <option name="superClass" value="" />
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="UserInfo" />
-                  <option name="tableName" value="user_info" />
+                  <option name="className" value="ForumComment" />
+                  <option name="tableName" value="forum_comment" />
                 </TableUIInfo>
               </list>
             </option>
-            <option name="templatesName" value="mybatis-plus2" />
+            <option name="templatesName" value="mybatis-plus3" />
             <option name="useLombokPlugin" value="true" />
           </GenerateConfig>
         </option>
         <option name="moduleName" value="easybbs-admin" />
         <option name="projectPath" value="$PROJECT_DIR$" />
-        <option name="templateName" value="mybatis-plus2" />
+        <option name="templateName" value="mybatis-plus3" />
       </TemplateContext>
     </option>
   </component>
