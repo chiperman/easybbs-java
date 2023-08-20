@@ -1,8 +1,10 @@
 package com.easybbs.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.easybbs.dto.UserArticleCount;
 import com.easybbs.entity.ForumArticle;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author 45083
@@ -12,6 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ForumArticleMapper extends BaseMapper<ForumArticle> {
+    UserArticleCount getUserArticleCount(@Param("userId") Long userId);
 
 }
 

@@ -1,10 +1,13 @@
 package com.easybbs.controller;
 
+import com.easybbs.dto.UserArticleCount;
 import com.easybbs.entity.UserInfo;
-import com.easybbs.mapper.UserInfoMapper;
+import com.easybbs.mapper.ForumArticleMapper;
 import com.easybbs.request.UserIdRequest;
+import com.easybbs.service.ForumArticleService;
 import com.easybbs.service.UserInfoService;
 import com.easybbs.vo.UserInfoResponseVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,20 +22,39 @@ public class UserContoller {
     UserInfoService userInfoService;
 
     @Autowired
-    UserInfoMapper userInfoMapper;
+    ForumArticleService forumArticleService;
+
+    @Autowired
+    ForumArticleMapper forumArticleMapper;
 
 
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     public UserInfoResponseVO getUserInfo(@RequestBody UserIdRequest userIdRequest) {
-        UserInfoResponseVO userInfoResponseVO = new UserInfoResponseVO();
         Long userId = userIdRequest.getUserId();
-        System.out.println("userId=" + userId);
-        // 首先获得用户信息
-        UserInfo userInfo = userInfoService.getById(userId);
-        // UserInfo userInfo = userInfoMapper.selectById(userId);
-        System.out.println(userInfo);
+        UserInfoResponseVO userInfoResponseVO = new UserInfoResponseVO();
+        // 根据 userId 获得用户信息
+        UserInfo userInfo = getUserInfo(userId);
 
+        // 将 userInfo 复制到 userInfoResponseVO
+        BeanUtils.copyProperties(userInfo, userInfoResponseVO);
+
+        // 查询该用户的发帖数和收到的点赞数
+        // int postCount = getPostCount(userId);
+
+        UserArticleCount userArticleCount = getUserArticleCount(userId);
+        userInfoResponseVO.setPostCount(userArticleCount.getPostCount());
+        userInfoResponseVO.setLikeCount(userArticleCount.getLikeCount());
 
         return userInfoResponseVO;
+    }
+
+    private UserInfo getUserInfo(Long userId) {
+        UserInfo userInfo = userInfoService.getById(userId);
+        return userInfo;
+    }
+
+
+    private UserArticleCount getUserArticleCount(Long userId) {
+        return forumArticleMapper.getUserArticleCount(userId);
     }
 }
