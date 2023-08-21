@@ -1,15 +1,19 @@
 package com.easybbs.controller;
 
-import cconst.EHttpCode;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.easybbs.dto.ForumArticleDto;
 import com.easybbs.dto.UserArticleCount;
 import com.easybbs.dto.UserIntegralDto;
+import com.easybbs.entity.ForumArticle;
+import com.easybbs.entity.LikeRecord;
 import com.easybbs.entity.UserInfo;
 import com.easybbs.entity.UserIntegralRecord;
 import com.easybbs.mapper.ForumArticleMapper;
+import com.easybbs.mapper.LikeRecordMapper;
 import com.easybbs.request.UserIdRequest;
-import com.easybbs.service.ForumArticleService;
 import com.easybbs.service.UserInfoService;
 import com.easybbs.service.UserIntegralRecordService;
+import com.easybbs.vo.LoadUserArticleVO;
 import com.easybbs.vo.UserInfoResponseVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -21,7 +25,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import response.MyResponse;
 import response.PageResult;
+import utils.SetPageUtils;
+import utils.SetResponseUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,13 +39,13 @@ public class UserController {
     UserInfoService userInfoService;
 
     @Autowired
-    ForumArticleService forumArticleService;
-
-    @Autowired
     ForumArticleMapper forumArticleMapper;
 
     @Autowired
     UserIntegralRecordService userIntegralRecordService;
+
+    @Autowired
+    LikeRecordMapper likeRecordMapper;
 
 
     /**
@@ -66,11 +73,7 @@ public class UserController {
         userInfoResponseVO.setPostCount(userArticleCount.getPostCount());
         userInfoResponseVO.setLikeCount(userArticleCount.getLikeCount());
 
-        response.setCode(EHttpCode.SUCCESS.getCode());
-        response.setInfo(EHttpCode.SUCCESS.getInfo());
-        response.setStatus(EHttpCode.SUCCESS.getStatus());
-        response.setData(userInfoResponseVO);
-
+        SetResponseUtils.setResponseSuccess(response, userInfoResponseVO);
         return response;
     }
 
@@ -93,25 +96,68 @@ public class UserController {
     public MyResponse<PageResult<List<UserIntegralRecord>>> loadUserIntegralRecord() {
         UserIntegralDto userIntegralDto = new UserIntegralDto();
         PageHelper.startPage(userIntegralDto.getPageNo(), userIntegralDto.getPageSize());
-        // PageHelper.startPage(1, 3);
+
         List<UserIntegralRecord> list = userIntegralRecordService.list();
 
         PageInfo<UserIntegralRecord> page = new PageInfo<>(list);
-
         PageResult<List<UserIntegralRecord>> result = new PageResult<>();
 
-        result.setPageTotal(page.getPages());
-        result.setPageNo(page.getPageNum());
-        result.setPageSize(page.getPageSize());
-        result.setTotalCount(page.getTotal());
-        result.setList(page.getList());
+        SetPageUtils.setPageResult(page, result);
 
         MyResponse<PageResult<List<UserIntegralRecord>>> response = new MyResponse<>();
-        response.setCode(EHttpCode.SUCCESS.getCode());
-        response.setInfo(EHttpCode.SUCCESS.getInfo());
-        response.setStatus(EHttpCode.SUCCESS.getStatus());
-        response.setData(result);
+        SetResponseUtils.setResponseSuccess(response, result);
         return response;
     }
 
+
+    // @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
+    // public MyResponse updateUserInfo(@RequestBody UserInfoUpdateVO vo) {
+    //     System.out.println(vo.getSex());
+    //     return new MyResponse<>();
+    // }
+
+
+    /**
+     * 1. 先根据 vo 里面的 userId 和 type 到 like_record 找到对应的数据 List
+     * 2. 遍历 List 找到 object_id 然后再去 forum_article 找到对应的文章
+     * 3. 存入最后的结果中
+     *
+     * @param vo
+     *
+     * @return
+     */
+
+    @RequestMapping(value = "/loadUserArticle", method = RequestMethod.POST)
+    public MyResponse<PageResult<List<ForumArticleDto>>> loadUserArticle(@RequestBody LoadUserArticleVO vo) {
+        ForumArticleDto forumArticleDto = new ForumArticleDto();
+
+        PageHelper.startPage(forumArticleDto.getPageNo(), forumArticleDto.getPageSize());
+
+        List<ForumArticleDto> list = new ArrayList<>();
+
+        PageInfo<ForumArticleDto> page = new PageInfo<>(list);
+        PageResult<List<ForumArticleDto>> result = new PageResult<>();
+
+        // 1.先根据 vo 里面的 userId 和 type 到 like_record 找到对应的数据 List
+        Long userId = vo.getUserId();
+        int type = vo.getType();
+
+        QueryWrapper<LikeRecord> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.eq("user_id", userId).eq("op_type", type);
+        List<LikeRecord> likeRecords = likeRecordMapper.selectList(queryWrapper);
+        for (LikeRecord record : likeRecords) {
+            // 2. 遍历 List 找到 object_id 然后再去 forum_article 找到对应的文章
+            ForumArticle article = forumArticleMapper.selectById(record.getObjectId());
+            BeanUtils.copyProperties(article, forumArticleDto);
+            list.add(forumArticleDto);
+        }
+
+        SetPageUtils.setPageResult(page, result);
+
+        MyResponse<PageResult<List<ForumArticleDto>>> response = new MyResponse<>();
+        SetResponseUtils.setResponseSuccess(response, result);
+
+        return response;
+    }
 }

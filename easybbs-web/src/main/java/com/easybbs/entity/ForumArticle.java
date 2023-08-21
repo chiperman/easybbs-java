@@ -1,11 +1,15 @@
 package com.easybbs.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 文章信息
+ *
  * @TableName forum_article
  */
 @Data
@@ -13,6 +17,7 @@ public class ForumArticle implements Serializable {
     /**
      * 文章ID
      */
+    @TableId(type = IdType.AUTO)
     private String articleId;
 
     /**
@@ -116,7 +121,7 @@ public class ForumArticle implements Serializable {
     private Integer attachmentType;
 
     /**
-     * -1已删除 0:待审核  1:已审核 
+     * -1已删除 0:待审核  1:已审核
      */
     private Integer status;
 

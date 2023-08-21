@@ -1,6 +1,5 @@
 package com.easybbs.controller;
 
-import cconst.EHttpCode;
 import com.easybbs.mapper.ForumBoardMapper;
 import com.easybbs.vo.ForumBoardResponseVO;
 import org.slf4j.Logger;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import response.MyResponse;
+import utils.SetResponseUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -30,10 +30,7 @@ public class ForumBoardController {
         List<ForumBoardResponseVO> boardList = forumBoardMapper.selectAllBoard();
         MyResponse<List<ForumBoardResponseVO>> response = new MyResponse<>();
         getChildrenBoard(boardList, 0L);
-        response.setCode(EHttpCode.SUCCESS.getCode());
-        response.setInfo(EHttpCode.SUCCESS.getInfo());
-        response.setStatus(EHttpCode.SUCCESS.getStatus());
-        response.setData(boardList);
+        SetResponseUtils.setResponseSuccess(response, boardList);
         return response;
     }
 
