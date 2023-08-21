@@ -1,0 +1,21 @@
+package utils;
+
+import cconst.EHttpCode;
+import response.MyResponse;
+
+public class SetResponseUtils {
+    public static void setResponseSuccess(MyResponse response, Object data) {
+        setResponse(response, EHttpCode.SUCCESS, data);
+    }
+
+    public static void setResponseFail(MyResponse response, Object data) {
+        setResponse(response, EHttpCode.FAIL, data);
+    }
+
+    private static void setResponse(MyResponse response, EHttpCode httpCode, Object data) {
+        response.setStatus(httpCode.getStatus());
+        response.setCode(httpCode.getCode());
+        response.setInfo(httpCode.getInfo());
+        response.setData(data);
+    }
+}

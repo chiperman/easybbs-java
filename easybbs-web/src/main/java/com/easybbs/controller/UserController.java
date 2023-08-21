@@ -1,6 +1,5 @@
 package com.easybbs.controller;
 
-import cconst.EHttpCode;
 import com.easybbs.dto.UserArticleCount;
 import com.easybbs.dto.UserIntegralDto;
 import com.easybbs.entity.UserInfo;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import response.MyResponse;
 import response.PageResult;
+import utils.SetPageUtils;
+import utils.SetResponseUtils;
 
 import java.util.List;
 
@@ -66,11 +67,7 @@ public class UserController {
         userInfoResponseVO.setPostCount(userArticleCount.getPostCount());
         userInfoResponseVO.setLikeCount(userArticleCount.getLikeCount());
 
-        response.setCode(EHttpCode.SUCCESS.getCode());
-        response.setInfo(EHttpCode.SUCCESS.getInfo());
-        response.setStatus(EHttpCode.SUCCESS.getStatus());
-        response.setData(userInfoResponseVO);
-
+        SetResponseUtils.setResponseSuccess(response, userInfoResponseVO);
         return response;
     }
 
@@ -93,25 +90,22 @@ public class UserController {
     public MyResponse<PageResult<List<UserIntegralRecord>>> loadUserIntegralRecord() {
         UserIntegralDto userIntegralDto = new UserIntegralDto();
         PageHelper.startPage(userIntegralDto.getPageNo(), userIntegralDto.getPageSize());
-        // PageHelper.startPage(1, 3);
+
         List<UserIntegralRecord> list = userIntegralRecordService.list();
 
         PageInfo<UserIntegralRecord> page = new PageInfo<>(list);
 
         PageResult<List<UserIntegralRecord>> result = new PageResult<>();
-
-        result.setPageTotal(page.getPages());
-        result.setPageNo(page.getPageNum());
-        result.setPageSize(page.getPageSize());
-        result.setTotalCount(page.getTotal());
-        result.setList(page.getList());
+        SetPageUtils.setPageResult(page, result);
 
         MyResponse<PageResult<List<UserIntegralRecord>>> response = new MyResponse<>();
-        response.setCode(EHttpCode.SUCCESS.getCode());
-        response.setInfo(EHttpCode.SUCCESS.getInfo());
-        response.setStatus(EHttpCode.SUCCESS.getStatus());
-        response.setData(result);
+        SetResponseUtils.setResponseSuccess(response, result);
         return response;
     }
 
+
+    @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
+    public MyResponse updateUserInfo() {
+        return new MyResponse<>();
+    }
 }
