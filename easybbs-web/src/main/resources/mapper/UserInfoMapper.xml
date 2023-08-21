@@ -5,19 +5,19 @@
 <mapper namespace="com.easybbs.mapper.UserInfoMapper">
 
     <resultMap id="BaseResultMap" type="com.easybbs.entity.UserInfo">
-            <id property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
-            <result property="email" column="email" jdbcType="VARCHAR"/>
-            <result property="password" column="password" jdbcType="VARCHAR"/>
-            <result property="sex" column="sex" jdbcType="TINYINT"/>
-            <result property="personDescription" column="person_description" jdbcType="VARCHAR"/>
-            <result property="joinTime" column="join_time" jdbcType="TIMESTAMP"/>
-            <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
-            <result property="lastLoginIp" column="last_login_ip" jdbcType="VARCHAR"/>
-            <result property="lastLoginIpAddress" column="last_login_ip_address" jdbcType="VARCHAR"/>
-            <result property="totalIntegral" column="total_integral" jdbcType="INTEGER"/>
-            <result property="currentIntegral" column="current_integral" jdbcType="INTEGER"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
+        <id property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="TINYINT"/>
+        <result property="personDescription" column="person_description" jdbcType="VARCHAR"/>
+        <result property="joinTime" column="join_time" jdbcType="TIMESTAMP"/>
+        <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+        <result property="lastLoginIp" column="last_login_ip" jdbcType="VARCHAR"/>
+        <result property="lastLoginIpAddress" column="last_login_ip_address" jdbcType="VARCHAR"/>
+        <result property="totalIntegral" column="total_integral" jdbcType="INTEGER"/>
+        <result property="currentIntegral" column="current_integral" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
