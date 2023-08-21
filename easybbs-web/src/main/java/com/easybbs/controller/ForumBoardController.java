@@ -29,7 +29,7 @@ public class ForumBoardController {
         // 创建一个用于存放板块数据的List
         List<ForumBoardResponseVO> boardList = forumBoardMapper.selectAllBoard();
         MyResponse<List<ForumBoardResponseVO>> response = new MyResponse<>();
-        List<ForumBoardResponseVO> boardTreeList = getChildrenBoard(boardList, 0L);
+        getChildrenBoard(boardList, 0L);
         response.setCode(EHttpCode.SUCCESS.getCode());
         response.setInfo(EHttpCode.SUCCESS.getInfo());
         response.setStatus(EHttpCode.SUCCESS.getStatus());
