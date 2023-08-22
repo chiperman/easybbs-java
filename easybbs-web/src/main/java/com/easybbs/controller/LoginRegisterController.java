@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import response.MyResponse;
 import utils.CreateImageCode;
 import utils.SetResponseUtils;
+import utils.StringTools;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -43,15 +44,25 @@ public class LoginRegisterController {
 
     @RequestMapping(value = "sendEmailCode")
     public MyResponse<Object> sendEmailCode(HttpSession session, String email, String checkCode, Integer type) {
-        MyResponse<Object> response = new MyResponse<>();
+        try {
+            MyResponse<Object> response = new MyResponse<>();
+            if (StringTools.isEmpty(email) || StringTools.isEmpty(checkCode) || type == null) {
+                SetResponseUtils.setResponseFailParam(response, null);
+                return response;
+            }
+            if (!checkCode.equals((String) session.getAttribute(CheckCode.CHECK_CODE_EMAIL))) {
+                // TODO:抛出验证码错误
+                SetResponseUtils.setResponseFailParam(response, null);
+                return response;
+            }
+            emailCodeService.sendEmailCode(email, type);
+            SetResponseUtils.setResponseSuccess(response, null);
+            return response;
+        } finally {
 
-        // if (StringTools.isEmpty(email) || StringTools.isEmpty(checkCode) || type == null) {
-        //     SetResponseUtils.setResponseFailParam(response, null);
-        //     return response;
-        // }
-        emailCodeService.sendEmailCode(email, type);
-        SetResponseUtils.setResponseSuccess(response, null);
-        return response;
+            session.removeAttribute(CheckCode.CHECK_CODE_EMAIL);
+        }
+
     }
 
     @RequestMapping(value = "/register")
@@ -70,10 +81,5 @@ public class LoginRegisterController {
             SetResponseUtils.setResponseFail(response, null);
         }
         return response;
-    }
-
-    @RequestMapping("/test")
-    public void test() {
-        emailCodeService.sendEmailCode("test02@qeq.com", 0);
     }
 }

@@ -62,7 +62,6 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
 
         emailCodeMapper.disableEmailCode(email);
 
-
         EmailCode emailCode = new EmailCode();
         emailCode.setCode(code);
         emailCode.setEmail(email);
