@@ -8,7 +8,6 @@ public class BasePageQuery {
     private static final Integer MIN_PAGE_NO = 1;
     private static  final Integer MIN_PAGE_SIZE = 10;
     private Integer pageNo = MIN_PAGE_NO;
-
     private Integer pageSize = MIN_PAGE_SIZE;
 
     public BasePageQuery() {

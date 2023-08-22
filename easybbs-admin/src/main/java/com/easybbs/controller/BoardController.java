@@ -11,14 +11,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import response.MyResponse;
-
-import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/board")
 public class BoardController {
     @Autowired
     ForumBoardService forumBoardService;
+
+    @RequestMapping("/loadBoard")
+    public MyResponse<List<BoardData>> loadBoard() {
+        List<BoardData> boards = forumBoardService.getBoard();
+        MyResponse<List<BoardData>> response = new MyResponse<>();
+        setResponseSuccess(response);
+        response.setData(boards);
+        return response;
+    }
+
     @RequestMapping("/saveBoard")
     public MyResponse<BoardData> saveBoard(@Validated({BoardUpdateVo.Create.class, BoardUpdateVo.Update.class})
                                                @RequestBody BoardUpdateVo vo) {

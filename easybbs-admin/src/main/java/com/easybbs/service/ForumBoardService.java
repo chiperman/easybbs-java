@@ -1,8 +1,11 @@
 package com.easybbs.service;
 
+import com.easybbs.dto.BoardData;
 import com.easybbs.entity.ForumBoard;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author Master-Z
@@ -11,4 +14,5 @@ import org.springframework.stereotype.Service;
 */
 public interface ForumBoardService extends IService<ForumBoard> {
 
+    public List<BoardData> getBoard();
 }
