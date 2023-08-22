@@ -22,18 +22,17 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserInfoMapper mapper;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("/loadUserList")
-    public MyResponse<PageResult<List<UserInfo>>> getUserList(HttpServletRequest request, @RequestBody UserQueryVo vo) {
+    public MyResponse<PageResult<UserInfo>> getUserList(HttpServletRequest request, @RequestBody UserQueryVo vo) {
         PageHelper.startPage(vo.getPageNo(), vo.getPageSize());
         List<UserInfo> lists = mapper.loadUserList(vo);
         PageInfo<UserInfo> page = new PageInfo<>(lists);
 
-        PageResult<List<UserInfo>> result = new PageResult();
+        PageResult<UserInfo> result = new PageResult();
         setPageResult(page, result);
 
-        MyResponse<PageResult<List<UserInfo>>> response = new MyResponse<>();
+        MyResponse<PageResult<UserInfo>> response = new MyResponse<>();
         response.setCode(EHttpCode.SUCCESS.getCode());
         response.setInfo(EHttpCode.SUCCESS.getInfo());
         response.setStatus(EHttpCode.SUCCESS.getStatus());
@@ -57,12 +56,28 @@ public class UserController {
         return response;
     }
 
+//    @RequestMapping("/sendMessage")
+//    public MyResponse sendMessage(HttpServletRequest request, @RequestBody UserMsgVo vo) {
+//        int result = mapper.updateStatus(vo);
+//        MyResponse response = new MyResponse();
+//        if (result != 1) {
+//            response.setStatus(EHttpCode.FAIL.getStatus());
+//            response.setCode(EHttpCode.FAIL.getCode());
+//            response.setInfo(EHttpCode.FAIL.getInfo());
+//        } else {
+//            response.setStatus(EHttpCode.SUCCESS.getStatus());
+//            response.setCode(EHttpCode.SUCCESS.getCode());
+//            response.setInfo(EHttpCode.SUCCESS.getInfo());
+//        }
+//        return response;
+//    }
+
 
 
     private void setPageResult(PageInfo page, PageResult result) {
-        result.setPageTotal(page.getPages());
+        result.setPageTotal((long) page.getPages());
         result.setPageNo(page.getPageNum());
-        result.setPageSize(page.getPageSize());
+        result.setPageSize((long) page.getPageSize());
         result.setTotalCount(page.getTotal());
         result.setList(page.getList());
     }

@@ -1,7 +1,5 @@
 package com.easybbs.aop;
 
-import com.easybbs.controller.UserController;
-import com.mysql.cj.log.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Objects;
 
 @Aspect
 @Component
@@ -20,16 +22,21 @@ public class ApiLogAspect {
 
     @Before("execution(public * com.easybbs.controller.*.*(..))")
     public void before(JoinPoint point) {
-        log.info("startTime:{}, url:{}, method:{}, ip:{}, args:[{}]", System.currentTimeMillis(),
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String ip = Objects.isNull(request.getHeader("X-Real-Ip")) ? request.getRemoteAddr() : request.getHeader("X-Real-Ip");
+        log.info("startTime:{}, url:{}, method:{}, ip:{}, args:[{}]", sdf.format(System.currentTimeMillis()),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getMethod(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRemoteAddr(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getMethod(), ip,
                 Arrays.toString(point.getArgs()));
     }
 
     @AfterReturning(returning = "result", pointcut = "execution(public * com.easybbs.controller.*.*(..))")
     public void afterReturning(JoinPoint joinPoint, Object result) {
-        log.info("endTime:{}, result:{}",System.currentTimeMillis(), result.toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        log.info("endTime:{}, result:{}",sdf.format(System.currentTimeMillis()), result.toString());
     }
 
 }
