@@ -2,15 +2,20 @@ package com.easybbs.service.impl;
 
 import cconst.ConstNumber;
 import cconst.EUserStatus;
+import cconst.UserIntegralChangeTypeEnum;
+import cconst.UserIntegralOperTypeEnum;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easybbs.entity.UserInfo;
+import com.easybbs.entity.UserIntegralRecord;
 import com.easybbs.exception.BusinessException;
 import com.easybbs.mapper.UserInfoMapper;
+import com.easybbs.mapper.UserIntegralRecordMapper;
 import com.easybbs.service.EmailCodeService;
 import com.easybbs.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import utils.StringTools;
 
 import java.util.Date;
@@ -28,6 +33,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Autowired
     EmailCodeService emailCodeService;
+
+    @Autowired
+    UserIntegralRecordMapper userIntegralRecordMapper;
 
     @Override
     public void register(String email, String emailCode, String nickName, String password) {
@@ -62,8 +70,45 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         insertInfo.setStatus(EUserStatus.NORMAL.getCode());
         insertInfo.setTotalIntegral(ConstNumber.ZERO);
         insertInfo.setCurrentIntegral(ConstNumber.ZERO);
-
         userInfoMapper.insert(insertInfo);
+
+        // 更新用户积分
+        updateUserIntegral(userId, UserIntegralOperTypeEnum.REGISTER, UserIntegralChangeTypeEnum.ADD.getChangeType(), ConstNumber.INTEGRAL_5);
+    }
+
+    /**
+     * 更新用户积分
+     *
+     * @param userId
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserIntegral(String userId, UserIntegralOperTypeEnum operTypeEnum, Integer changeType,
+                                   Integer integral) {
+
+        integral = changeType * integral;
+        if (integral == 0) {
+            return;
+        }
+
+        UserInfo userInfo = userInfoMapper.selectById(userId);
+
+
+        if (UserIntegralChangeTypeEnum.REDUCE.getChangeType().equals(changeType) && userInfo.getCurrentIntegral() + integral < 0) {
+            integral = changeType * userInfo.getCurrentIntegral();
+        }
+
+        UserIntegralRecord record = new UserIntegralRecord();
+        record.setUserId(userId);
+        record.setOperType(operTypeEnum.getOperType());
+        record.setCreateTime(new Date());
+        record.setIntegral(integral);
+        userIntegralRecordMapper.insert(record);
+
+        Integer count = userInfoMapper.updateIntegral(Long.valueOf(userId), integral);
+        if (count == 0) {
+            throw new BusinessException("更新用户积分失败");
+        }
     }
 }
 

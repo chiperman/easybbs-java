@@ -1,5 +1,6 @@
 package com.easybbs.service;
 
+import cconst.UserIntegralOperTypeEnum;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.easybbs.entity.UserInfo;
 
@@ -10,4 +11,6 @@ import com.easybbs.entity.UserInfo;
  */
 public interface UserInfoService extends IService<UserInfo> {
     void register(String email, String emailCode, String nickName, String password);
+
+    void updateUserIntegral(String userId, UserIntegralOperTypeEnum operTypeEnum, Integer changeType, Integer integral);
 }

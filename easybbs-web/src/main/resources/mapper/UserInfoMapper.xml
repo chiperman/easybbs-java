@@ -27,4 +27,13 @@
         last_login_ip_address,total_integral,current_integral,
         status
     </sql>
+    <update id="updateIntegral">
+        update user_info
+        set current_integral =current_integral + #{integral}
+        <if test="integral &gt; 0">
+            ,total_integral = total_integral+#{integral}
+        </if>
+        where user_id = #{userId}
+        <![CDATA[and current_integral +#{integral}>=0]]>
+    </update>
 </mapper>
