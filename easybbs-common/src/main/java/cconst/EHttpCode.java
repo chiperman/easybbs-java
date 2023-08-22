@@ -1,9 +1,7 @@
 package cconst;
 
 public enum EHttpCode {
-    SUCCESS(200, "请求成功", "success"),
-    FAIL(603, "更新失败", "fail"),
-    ;
+    SUCCESS(200, "请求成功", "success"), FAIL(603, "更新失败", "fail"), FAIL_Params(600, "请求参数错误", "fail");
     private Integer code;
     private String info;
     private String status;
