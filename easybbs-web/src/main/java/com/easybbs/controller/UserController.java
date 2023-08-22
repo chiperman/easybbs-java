@@ -29,6 +29,7 @@ import utils.SetPageUtils;
 import utils.SetResponseUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -135,6 +136,8 @@ public class UserController {
 
         List<ForumArticleDto> list = new ArrayList<>();
 
+        Collections.sort(list, (article1, article2) -> article2.getPostTime().compareTo(article1.getPostTime()));
+
         PageInfo<ForumArticleDto> page = new PageInfo<>(list);
         PageResult<List<ForumArticleDto>> result = new PageResult<>();
 
@@ -149,12 +152,12 @@ public class UserController {
         for (LikeRecord record : likeRecords) {
             // 2. 遍历 List 找到 object_id 然后再去 forum_article 找到对应的文章
             ForumArticle article = forumArticleMapper.selectById(record.getObjectId());
-            BeanUtils.copyProperties(article, forumArticleDto);
-            list.add(forumArticleDto);
+            ForumArticleDto articleDto = new ForumArticleDto(); // 创建新的实例
+            BeanUtils.copyProperties(article, articleDto);
+            list.add(articleDto);
         }
 
         SetPageUtils.setPageResult(page, result);
-
         MyResponse<PageResult<List<ForumArticleDto>>> response = new MyResponse<>();
         SetResponseUtils.setResponseSuccess(response, result);
 
