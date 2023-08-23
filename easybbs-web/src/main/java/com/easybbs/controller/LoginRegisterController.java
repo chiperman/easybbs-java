@@ -2,9 +2,10 @@ package com.easybbs.controller;
 
 import com.easybbs.annotation.GlobalInterceptor;
 import com.easybbs.annotation.VerifyParam;
-import com.easybbs.cconst.CheckCode;
+import com.easybbs.cconst.Constants;
 import com.easybbs.cconst.EHttpCode;
 import com.easybbs.cconst.VerifyRegexEnum;
+import com.easybbs.dto.SessionWebUserDto;
 import com.easybbs.exception.BusinessException;
 import com.easybbs.response.MyResponse;
 import com.easybbs.service.EmailCodeService;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -42,10 +44,10 @@ public class LoginRegisterController {
         String code = vCode.getCode();
         if (type == null || type == 0) {
             // 登陆注册
-            session.setAttribute(CheckCode.CHECK_CODE_KEY, code);
+            session.setAttribute(Constants.CHECK_CODE_KEY, code);
         } else {
             // 获取邮箱
-            session.setAttribute(CheckCode.CHECK_CODE_EMAIL, code);
+            session.setAttribute(Constants.CHECK_CODE_EMAIL, code);
         }
         System.out.println(code);
         vCode.write(response.getOutputStream());
@@ -58,14 +60,14 @@ public class LoginRegisterController {
                                             @VerifyParam(required = true) Integer type) {
         try {
             MyResponse<Object> response = new MyResponse<>();
-            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(CheckCode.CHECK_CODE_KEY))) {
+            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException("图片验证码错误");
             }
             emailCodeService.sendEmailCode(email, type);
             SetResponseUtils.setResponseSuccess(response, null);
             return response;
         } finally {
-            session.removeAttribute(CheckCode.CHECK_CODE_EMAIL);
+            session.removeAttribute(Constants.CHECK_CODE_EMAIL);
         }
 
     }
@@ -81,7 +83,7 @@ public class LoginRegisterController {
                                        @VerifyParam(required = true) String checkCode) {
         try {
             MyResponse<Object> response = new MyResponse<>();
-            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(CheckCode.CHECK_CODE_KEY))) {
+            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException(EHttpCode.CODE_601);
 
             }
@@ -89,24 +91,30 @@ public class LoginRegisterController {
             SetResponseUtils.setResponseSuccess(response, null);
             return response;
         } finally {
-            session.removeAttribute(CheckCode.CHECK_CODE_KEY);
+            session.removeAttribute(Constants.CHECK_CODE_KEY);
         }
     }
 
     @RequestMapping(value = "/login")
     @GlobalInterceptor(checkParams = true)
-    public MyResponse<Object> login(HttpSession session, @VerifyParam(required = true) String email,
+    public MyResponse<Object> login(HttpSession session, HttpServletRequest request,
+                                    @VerifyParam(required = true) String email,
                                     @VerifyParam(required = true) String password,
                                     @VerifyParam(required = true) String checkCode) {
         try {
             MyResponse<Object> response = new MyResponse<>();
-            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(CheckCode.CHECK_CODE_KEY))) {
+            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException(EHttpCode.CODE_601);
             }
+
+            BaseController baseController = new BaseController();
+            SessionWebUserDto sessionWebUserDto = userInfoService.login(email, password,
+                    baseController.getIpAddr(request));
+            session.setAttribute(Constants.SESSION_KEY, sessionWebUserDto);
             SetResponseUtils.setResponseSuccess(response, null);
             return response;
         } finally {
-            session.removeAttribute(CheckCode.CHECK_CODE_KEY);
+            session.removeAttribute(Constants.CHECK_CODE_KEY);
         }
     }
 }

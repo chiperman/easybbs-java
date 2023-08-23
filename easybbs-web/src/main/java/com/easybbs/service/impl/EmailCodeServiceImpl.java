@@ -1,8 +1,8 @@
 package com.easybbs.service.impl;
 
-import com.easybbs.cconst.ConstNumber;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.easybbs.cconst.Constants;
 import com.easybbs.config.WebConfig;
 import com.easybbs.entity.EmailCode;
 import com.easybbs.entity.UserInfo;
@@ -10,6 +10,7 @@ import com.easybbs.exception.BusinessException;
 import com.easybbs.mapper.EmailCodeMapper;
 import com.easybbs.mapper.UserInfoMapper;
 import com.easybbs.service.EmailCodeService;
+import com.easybbs.utils.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.easybbs.utils.StringTools;
 
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
@@ -47,7 +47,7 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sendEmailCode(String email, Integer type) {
-        if (ConstNumber.ZERO == 0) {
+        if (Constants.ZERO == 0) {
             // 在用户表中查询是否存在邮箱，判断用户是否已经注册
             QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("email", email);
@@ -57,7 +57,7 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
             }
         }
 
-        String code = StringTools.getRandomString(ConstNumber.LENGHT_5);
+        String code = StringTools.getRandomString(Constants.LENGTH_5);
         sendEmailCodeDo(email, code);
 
         emailCodeMapper.disableEmailCode(email);
@@ -65,7 +65,7 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
         EmailCode emailCode = new EmailCode();
         emailCode.setCode(code);
         emailCode.setEmail(email);
-        emailCode.setStatus(ConstNumber.ZERO);
+        emailCode.setStatus(Constants.ZERO);
         emailCode.setCreateTime(new Date());
         emailCodeMapper.insert(emailCode);
     }
@@ -80,7 +80,7 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
             throw new BusinessException("邮箱验证码不正确");
         }
 
-        if (dbInfo.getStatus() != ConstNumber.ZERO || System.currentTimeMillis() - dbInfo.getCreateTime().getTime() > 1000 * 60 * ConstNumber.LENGHT_15) {
+        if (dbInfo.getStatus() != Constants.ZERO || System.currentTimeMillis() - dbInfo.getCreateTime().getTime() > 1000 * 60 * Constants.LENGTH_15) {
             throw new BusinessException("邮箱验证码已失效");
         }
         emailCodeMapper.disableEmailCode(email);
