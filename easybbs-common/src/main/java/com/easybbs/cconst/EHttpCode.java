@@ -1,7 +1,12 @@
-package cconst;
+package com.easybbs.cconst;
 
 public enum EHttpCode {
-    SUCCESS(200, "请求成功", "success"), FAIL(603, "更新失败", "fail"), FAIL_Params(600, "请求参数错误", "fail");
+    SUCCESS(200, "请求成功", "success"),
+    FAIL(603, "更新失败", "fail"),
+    CODE_600(600, "请求参数错误", "error"),
+    CODE_601(601, "验证码错误", "error"),
+    CODE_900(900, "Http 请求超时", "error");
+
     private Integer code;
     private String info;
     private String status;

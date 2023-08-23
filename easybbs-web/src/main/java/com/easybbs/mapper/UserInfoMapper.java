@@ -3,6 +3,7 @@ package com.easybbs.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.easybbs.entity.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author 45083
@@ -13,6 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
 
+    Integer updateIntegral(@Param("userId") Long userId, Integer integral);
 }
 
 

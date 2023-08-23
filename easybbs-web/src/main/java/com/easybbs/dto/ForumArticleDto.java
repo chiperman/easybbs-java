@@ -1,7 +1,7 @@
 package com.easybbs.dto;
 
 import lombok.Data;
-import request.BasePageQuery;
+import com.easybbs.request.BasePageQuery;
 
 import java.util.Date;
 

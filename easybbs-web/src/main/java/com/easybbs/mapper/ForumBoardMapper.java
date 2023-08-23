@@ -1,7 +1,7 @@
 package com.easybbs.mapper;
 
+import com.easybbs.dto.ForumBoardDto;
 import com.easybbs.entity.ForumBoard;
-import com.easybbs.vo.ForumBoardResponseVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -27,6 +27,6 @@ public interface ForumBoardMapper {
 
     int updateByPrimaryKey(ForumBoard record);
 
-    List<ForumBoardResponseVO> selectAllBoard();
+    List<ForumBoardDto> selectAllBoard();
 
 }

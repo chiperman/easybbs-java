@@ -1,14 +1,19 @@
 package com.easybbs.controller;
 
-import cconst.CheckCode;
+import com.easybbs.annotation.GlobalInterceptor;
+import com.easybbs.annotation.VerifyParam;
+import com.easybbs.cconst.CheckCode;
+import com.easybbs.cconst.EHttpCode;
+import com.easybbs.cconst.VerifyRegexEnum;
+import com.easybbs.exception.BusinessException;
+import com.easybbs.response.MyResponse;
 import com.easybbs.service.EmailCodeService;
+import com.easybbs.service.UserInfoService;
+import com.easybbs.utils.CreateImageCode;
+import com.easybbs.utils.SetResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import response.MyResponse;
-import utils.CreateImageCode;
-import utils.SetResponseUtils;
-import utils.StringTools;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,11 +25,15 @@ public class LoginRegisterController {
     @Autowired
     EmailCodeService emailCodeService;
 
+    @Autowired
+    UserInfoService userInfoService;
+
     /**
      * 验证码
      */
     @RequestMapping(value = "/checkCode")
     public void checkCode(HttpServletResponse response, HttpSession session, Integer type) throws IOException {
+        // 生成验证码图片
         CreateImageCode vCode = new CreateImageCode(130, 38, 5, 10);
         response.setHeader("Pargma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
@@ -43,43 +52,61 @@ public class LoginRegisterController {
     }
 
     @RequestMapping(value = "sendEmailCode")
-    public MyResponse<Object> sendEmailCode(HttpSession session, String email, String checkCode, Integer type) {
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<Object> sendEmailCode(HttpSession session, @VerifyParam(required = true) String email,
+                                            @VerifyParam(required = true) String checkCode,
+                                            @VerifyParam(required = true) Integer type) {
         try {
             MyResponse<Object> response = new MyResponse<>();
-            if (StringTools.isEmpty(email) || StringTools.isEmpty(checkCode) || type == null) {
-                SetResponseUtils.setResponseFailParam(response, null);
-                return response;
-            }
-            if (!checkCode.equals((String) session.getAttribute(CheckCode.CHECK_CODE_EMAIL))) {
-                // TODO:抛出验证码错误
-                SetResponseUtils.setResponseFailParam(response, null);
-                return response;
+            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(CheckCode.CHECK_CODE_KEY))) {
+                throw new BusinessException("图片验证码错误");
             }
             emailCodeService.sendEmailCode(email, type);
             SetResponseUtils.setResponseSuccess(response, null);
             return response;
         } finally {
-
             session.removeAttribute(CheckCode.CHECK_CODE_EMAIL);
         }
 
     }
 
     @RequestMapping(value = "/register")
-    public MyResponse<Object> register(HttpSession session, String checkCode) {
-        MyResponse<Object> response = new MyResponse<>();
-        if (checkCode == null || "".equals(checkCode)) {
-            SetResponseUtils.setResponseFailParam(response, null);
-            return response;
-        }
-        String sessionCode = (String) session.getAttribute(CheckCode.CHECK_CODE_KEY);
-        if (sessionCode.equals(checkCode)) {
-            // 返回验证成功
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<Object> register(HttpSession session,
+                                       @VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150) String email,
+                                       @VerifyParam(required = true) String emailCode,
+                                       @VerifyParam(required = true, max = 20) String nickName,
+                                       @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8, max =
+                                               18) String password,
+                                       @VerifyParam(required = true) String checkCode) {
+        try {
+            MyResponse<Object> response = new MyResponse<>();
+            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(CheckCode.CHECK_CODE_KEY))) {
+                throw new BusinessException(EHttpCode.CODE_601);
+
+            }
+            userInfoService.register(email, emailCode, nickName, password);
             SetResponseUtils.setResponseSuccess(response, null);
-        } else {
-            // 返回验证失败
-            SetResponseUtils.setResponseFail(response, null);
+            return response;
+        } finally {
+            session.removeAttribute(CheckCode.CHECK_CODE_KEY);
         }
-        return response;
+    }
+
+    @RequestMapping(value = "/login")
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<Object> login(HttpSession session, @VerifyParam(required = true) String email,
+                                    @VerifyParam(required = true) String password,
+                                    @VerifyParam(required = true) String checkCode) {
+        try {
+            MyResponse<Object> response = new MyResponse<>();
+            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(CheckCode.CHECK_CODE_KEY))) {
+                throw new BusinessException(EHttpCode.CODE_601);
+            }
+            SetResponseUtils.setResponseSuccess(response, null);
+            return response;
+        } finally {
+            session.removeAttribute(CheckCode.CHECK_CODE_KEY);
+        }
     }
 }

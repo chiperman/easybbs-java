@@ -10,4 +10,6 @@ import com.easybbs.entity.EmailCode;
  */
 public interface EmailCodeService extends IService<EmailCode> {
     void sendEmailCode(String email, Integer type);
+
+    void checkCode(String email, String emailCode);
 }

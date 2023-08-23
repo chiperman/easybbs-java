@@ -1,5 +1,6 @@
 package com.easybbs.vo;
-import request.BasePageQuery;
+
+import com.easybbs.request.BasePageQuery;
 import lombok.Data;
 
 @Data
