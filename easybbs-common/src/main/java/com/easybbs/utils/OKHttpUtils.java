@@ -41,7 +41,7 @@ public class OKHttpUtils {
         return requestBuilder;
     }
 
-    private static FormBody.Builder getBuilder(Map<String, String> params) {
+    public static FormBody.Builder getBuilder(Map<String, String> params) {
         FormBody.Builder builder = new FormBody.Builder();
         if (null != params) {
             return builder;
@@ -59,7 +59,7 @@ public class OKHttpUtils {
         return builder;
     }
 
-    private static String getRequest(String url) throws BusinessException {
+    public static String getRequest(String url) throws BusinessException {
         ResponseBody responseBody = null;
         try {
             OkHttpClient.Builder clientBuilder = getClientBuilder();

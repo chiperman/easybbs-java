@@ -1,6 +1,7 @@
 package com.easybbs.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -18,8 +19,7 @@ public class UserInfo implements Serializable {
     /**
      * 用户ID
      */
-    // @TableId(type = IdType.AUTO)
-    // @TableField(value = "user_id")
+    @TableId
     private Long userId;
 
     /**

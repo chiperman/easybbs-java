@@ -16,4 +16,6 @@ public interface UserInfoService extends IService<UserInfo> {
     void updateUserIntegral(String userId, UserIntegralOperTypeEnum operTypeEnum, Integer changeType, Integer integral);
 
     SessionWebUserDto login(String email, String password, String ip);
+
+    void resetPwd(String email, String password, String emailCode);
 }
