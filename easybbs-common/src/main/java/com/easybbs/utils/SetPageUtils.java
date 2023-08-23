@@ -1,7 +1,7 @@
-package utils;
+package com.easybbs.utils;
 
 import com.github.pagehelper.PageInfo;
-import response.PageResult;
+import com.easybbs.response.PageResult;
 
 public class SetPageUtils {
 

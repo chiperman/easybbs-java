@@ -1,4 +1,4 @@
-package utils;
+package com.easybbs.utils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

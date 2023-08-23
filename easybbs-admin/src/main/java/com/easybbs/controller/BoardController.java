@@ -1,5 +1,6 @@
 package com.easybbs.controller;
-import cconst.EHttpCode;
+
+import com.easybbs.cconst.EHttpCode;
 import com.easybbs.dto.BoardData;
 import com.easybbs.entity.ForumBoard;
 import com.easybbs.service.ForumBoardService;
@@ -10,7 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import response.MyResponse;
+import com.easybbs.response.MyResponse;
+
 import java.util.List;
 
 @RestController
@@ -29,8 +31,8 @@ public class BoardController {
     }
 
     @RequestMapping("/saveBoard")
-    public MyResponse<BoardData> saveBoard(@Validated({BoardUpdateVo.Create.class, BoardUpdateVo.Update.class})
-                                               @RequestBody BoardUpdateVo vo) {
+    public MyResponse<BoardData> saveBoard(
+            @Validated({BoardUpdateVo.Create.class, BoardUpdateVo.Update.class}) @RequestBody BoardUpdateVo vo) {
         ForumBoard entity = new ForumBoard();
         BoardData result = new BoardData();
         BeanUtils.copyProperties(vo, entity);

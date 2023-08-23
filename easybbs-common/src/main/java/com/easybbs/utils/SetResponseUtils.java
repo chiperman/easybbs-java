@@ -1,7 +1,7 @@
-package utils;
+package com.easybbs.utils;
 
-import cconst.EHttpCode;
-import response.MyResponse;
+import com.easybbs.cconst.EHttpCode;
+import com.easybbs.response.MyResponse;
 
 public class SetResponseUtils {
     public static void setResponseSuccess(MyResponse response, Object data) {

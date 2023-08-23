@@ -1,4 +1,4 @@
-package response;
+package com.easybbs.response;
 
 import lombok.Data;
 

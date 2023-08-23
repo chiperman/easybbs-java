@@ -1,9 +1,9 @@
 package com.easybbs.service.impl;
 
-import cconst.ConstNumber;
-import cconst.EUserStatus;
-import cconst.UserIntegralChangeTypeEnum;
-import cconst.UserIntegralOperTypeEnum;
+import com.easybbs.cconst.ConstNumber;
+import com.easybbs.cconst.EUserStatus;
+import com.easybbs.cconst.UserIntegralChangeTypeEnum;
+import com.easybbs.cconst.UserIntegralOperTypeEnum;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easybbs.entity.UserInfo;
@@ -16,7 +16,7 @@ import com.easybbs.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import utils.StringTools;
+import com.easybbs.utils.StringTools;
 
 import java.util.Date;
 

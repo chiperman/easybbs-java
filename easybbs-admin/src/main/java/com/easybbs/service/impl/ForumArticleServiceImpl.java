@@ -1,9 +1,7 @@
 package com.easybbs.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easybbs.dto.ArticleCommentDto;
@@ -12,31 +10,30 @@ import com.easybbs.entity.ForumComment;
 import com.easybbs.mapper.ForumCommentMapper;
 import com.easybbs.service.ForumArticleService;
 import com.easybbs.mapper.ForumArticleMapper;
-import com.easybbs.service.ForumCommentService;
 import com.easybbs.vo.ArticleBoardVo;
 import com.easybbs.vo.ArticleQueryVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import response.PageResult;
+import com.easybbs.response.PageResult;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
-* @author Master-Z
-* @description 针对表【forum_article(文章信息)】的数据库操作Service实现
-* @createDate 2023-08-20 10:26:16
-*/
+ * @author Master-Z
+ * @description 针对表【forum_article(文章信息)】的数据库操作Service实现
+ * @createDate 2023-08-20 10:26:16
+ */
 @Service
-public class ForumArticleServiceImpl extends ServiceImpl<ForumArticleMapper, ForumArticle>
-    implements ForumArticleService{
+public class ForumArticleServiceImpl extends ServiceImpl<ForumArticleMapper, ForumArticle> implements ForumArticleService {
     @Autowired
     ForumArticleMapper forumArticleMapper;
     @Autowired
     ForumCommentMapper forumCommentMapper;
+
     @Override
     public PageResult<ForumArticle> loadArticle(ArticleQueryVo vo) {
         QueryWrapper<ForumArticle> wrapper = new QueryWrapper<>();
@@ -104,12 +101,11 @@ public class ForumArticleServiceImpl extends ServiceImpl<ForumArticleMapper, For
         comments.forEach(comment -> {
             QueryWrapper<ForumComment> wrapper = new QueryWrapper<>();
             wrapper.eq("p_comment_id", comment.getCommentId());
-            List<ArticleCommentDto> children = forumCommentMapper.selectList(wrapper).stream()
-                    .map(entity -> {
-                        ArticleCommentDto dto = new ArticleCommentDto();
-                        BeanUtils.copyProperties(entity, dto);
-                        return dto;
-                    }).collect(Collectors.toList());
+            List<ArticleCommentDto> children = forumCommentMapper.selectList(wrapper).stream().map(entity -> {
+                ArticleCommentDto dto = new ArticleCommentDto();
+                BeanUtils.copyProperties(entity, dto);
+                return dto;
+            }).collect(Collectors.toList());
             comment.setChildren(children);
         });
     }

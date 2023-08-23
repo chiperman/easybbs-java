@@ -1,4 +1,4 @@
-package cconst;
+package com.easybbs.cconst;
 
 public class ConstNumber {
     public static final Integer INTEGRAL_5 = 5;

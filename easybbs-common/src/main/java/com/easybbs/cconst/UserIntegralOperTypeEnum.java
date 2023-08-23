@@ -1,4 +1,4 @@
-package cconst;
+package com.easybbs.cconst;
 
 import lombok.Getter;
 

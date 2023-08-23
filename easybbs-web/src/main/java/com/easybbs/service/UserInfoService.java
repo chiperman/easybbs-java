@@ -1,6 +1,6 @@
 package com.easybbs.service;
 
-import cconst.UserIntegralOperTypeEnum;
+import com.easybbs.cconst.UserIntegralOperTypeEnum;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.easybbs.entity.UserInfo;
 

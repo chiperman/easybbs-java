@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import response.MyResponse;
-import response.PageResult;
-import utils.SetPageUtils;
-import utils.SetResponseUtils;
+import com.easybbs.response.MyResponse;
+import com.easybbs.response.PageResult;
+import com.easybbs.utils.SetPageUtils;
+import com.easybbs.utils.SetResponseUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

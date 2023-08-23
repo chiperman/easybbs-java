@@ -1,6 +1,6 @@
 package com.easybbs.exception;
 
-import response.MyResponse;
+import com.easybbs.response.MyResponse;
 
 public class BusinessException extends RuntimeException {
     private MyResponse<Object> response;

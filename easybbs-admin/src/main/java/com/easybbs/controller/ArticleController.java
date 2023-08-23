@@ -1,6 +1,6 @@
 package com.easybbs.controller;
 
-import cconst.EHttpCode;
+import com.easybbs.cconst.EHttpCode;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.easybbs.dto.ArticleCommentDto;
 import com.easybbs.entity.ForumArticle;
@@ -8,18 +8,14 @@ import com.easybbs.service.ForumArticleService;
 import com.easybbs.service.ForumCommentService;
 import com.easybbs.vo.ArticleBoardVo;
 import com.easybbs.vo.ArticleQueryVo;
-import com.easybbs.vo.UserUpdateVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import response.MyResponse;
-import response.PageResult;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import com.easybbs.response.MyResponse;
+import com.easybbs.response.PageResult;
 
 @RestController
 @RequestMapping("/forum")
@@ -28,6 +24,7 @@ public class ArticleController {
     private ForumArticleService articleService;
     @Autowired
     private ForumCommentService commentService;
+
     @RequestMapping("/loadArticle")
     public MyResponse<PageResult<ForumArticle>> getArticle(@RequestBody ArticleQueryVo vo) {
         PageResult<ForumArticle> result = articleService.loadArticle(vo);
@@ -71,7 +68,7 @@ public class ArticleController {
     public MyResponse topArticle(@Validated(ArticleQueryVo.TopArticle.class) @RequestBody ArticleQueryVo vo) {
         UpdateWrapper<ForumArticle> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("article_id", vo.getArticleId());
-        updateWrapper.set("top_type",vo.getTopType());
+        updateWrapper.set("top_type", vo.getTopType());
         boolean result = articleService.update(null, updateWrapper);
         MyResponse<PageResult<ForumArticle>> response = new MyResponse<>();
 

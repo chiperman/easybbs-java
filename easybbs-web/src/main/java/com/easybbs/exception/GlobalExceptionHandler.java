@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import response.MyResponse;
+import com.easybbs.response.MyResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -14,6 +14,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MyResponse<Object>> handleBusinessException(BusinessException e) {
         MyResponse<Object> response = e.getResponse();
         return ResponseEntity.status(response.getCode()).body(response);
-        
+
     }
 }

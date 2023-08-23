@@ -1,6 +1,6 @@
 package com.easybbs.service.impl;
 
-import cconst.ConstNumber;
+import com.easybbs.cconst.ConstNumber;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easybbs.config.WebConfig;
@@ -17,7 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import utils.StringTools;
+import com.easybbs.utils.StringTools;
 
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
