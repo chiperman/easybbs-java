@@ -1,7 +1,13 @@
 package com.easybbs.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import com.easybbs.cconst.Constants;
+import com.easybbs.dto.SessionWebUserDto;
+import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+@Component
 public class BaseController {
     protected String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
@@ -29,5 +35,10 @@ public class BaseController {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    protected SessionWebUserDto getUserInfoFromSession(HttpSession session) {
+        SessionWebUserDto sessionWebUserDto = (SessionWebUserDto) session.getAttribute(Constants.SESSION_KEY);
+        return sessionWebUserDto;
     }
 }

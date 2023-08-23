@@ -161,7 +161,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         return sessionWebUserDto;
     }
 
-
     public String getIpAddress(String ip) {
         try {
             String url = "http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip;
@@ -178,6 +177,23 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         }
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resetPwd(String email, String password, String emailCode) {
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("email", email);
+
+        UserInfo userInfo = userInfoMapper.selectOne(queryWrapper);
+        if (null == userInfo) {
+            throw new BusinessException("邮箱不存在");
+        }
+        emailCodeService.checkCode(email, emailCode);
+
+
+        UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("user_id", userInfo.getUserId()).set("password", StringTools.encodeMd5(password));
+        userInfoMapper.update(null, updateWrapper);
+    }
 
 }
 

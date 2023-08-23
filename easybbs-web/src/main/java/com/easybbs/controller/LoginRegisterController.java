@@ -30,6 +30,9 @@ public class LoginRegisterController {
     @Autowired
     UserInfoService userInfoService;
 
+    @Autowired
+    BaseController baseController;
+
     /**
      * 验证码
      */
@@ -85,7 +88,6 @@ public class LoginRegisterController {
             MyResponse<Object> response = new MyResponse<>();
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException(EHttpCode.CODE_601);
-
             }
             userInfoService.register(email, emailCode, nickName, password);
             SetResponseUtils.setResponseSuccess(response, null);
@@ -106,15 +108,35 @@ public class LoginRegisterController {
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException(EHttpCode.CODE_601);
             }
-
-            BaseController baseController = new BaseController();
             SessionWebUserDto sessionWebUserDto = userInfoService.login(email, password,
                     baseController.getIpAddr(request));
             session.setAttribute(Constants.SESSION_KEY, sessionWebUserDto);
+            SetResponseUtils.setResponseSuccess(response, sessionWebUserDto);
+            return response;
+        } finally {
+            session.removeAttribute(Constants.CHECK_CODE_KEY);
+        }
+    }
+
+    @RequestMapping(value = "/resetPwd")
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<Object> resetPwd(HttpSession session, @VerifyParam(required = true) String email,
+                                       @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8, max =
+                                               18) String password,
+                                       @VerifyParam(required = true) String checkCode,
+                                       @VerifyParam(required = true) String emailCode) {
+        try {
+            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
+                throw new BusinessException(EHttpCode.CODE_601);
+            }
+            MyResponse<Object> response = new MyResponse<>();
+            userInfoService.resetPwd(email, password, emailCode);
             SetResponseUtils.setResponseSuccess(response, null);
             return response;
         } finally {
             session.removeAttribute(Constants.CHECK_CODE_KEY);
         }
     }
+
+
 }

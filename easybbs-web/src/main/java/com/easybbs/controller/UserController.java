@@ -1,10 +1,8 @@
 package com.easybbs.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.easybbs.dto.ForumArticleDto;
-import com.easybbs.dto.UserArticleCount;
-import com.easybbs.dto.UserInfoResponseDto;
-import com.easybbs.dto.UserIntegralDto;
+import com.easybbs.annotation.GlobalInterceptor;
+import com.easybbs.dto.*;
 import com.easybbs.entity.ForumArticle;
 import com.easybbs.entity.LikeRecord;
 import com.easybbs.entity.UserInfo;
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,9 +66,6 @@ public class UserController {
         // 将 userInfo 复制到 userInfoResponseVO
         BeanUtils.copyProperties(userInfo, userInfoResponseDto);
 
-        // 查询该用户的发帖数和收到的点赞数
-        // int postCount = getPostCount(userId);
-
         UserArticleCount userArticleCount = getUserArticleCount(userId);
         userInfoResponseDto.setPostCount(userArticleCount.getPostCount());
         userInfoResponseDto.setLikeCount(userArticleCount.getLikeCount());
@@ -78,11 +74,52 @@ public class UserController {
         return response;
     }
 
+    /**
+     * 获取登录用户信息
+     *
+     * @param session
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getLoginUserInfo")
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<SessionWebUserDto> getUserInfo(HttpSession session) {
+        MyResponse<SessionWebUserDto> response = new MyResponse<>();
+        BaseController baseController = new BaseController();
+        SessionWebUserDto sessionWebUserDto = baseController.getUserInfoFromSession(session);
+        SetResponseUtils.setResponseSuccess(response, sessionWebUserDto);
+        return response;
+    }
+
+    /**
+     * 获取登录用户信息
+     *
+     * @param session
+     *
+     * @return
+     */
+    @RequestMapping(value = "/logout")
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<SessionWebUserDto> logout(HttpSession session) {
+        MyResponse<SessionWebUserDto> response = new MyResponse<>();
+        session.invalidate();
+        SetResponseUtils.setResponseSuccess(response, null);
+        return response;
+    }
+
+
     private UserInfo getUserInfo(Long userId) {
         return userInfoService.getById(userId);
     }
 
 
+    /**
+     * 获得用户的发帖数和点赞数
+     *
+     * @param userId
+     *
+     * @return
+     */
     private UserArticleCount getUserArticleCount(Long userId) {
         return forumArticleMapper.getUserArticleCount(userId);
     }
@@ -94,6 +131,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/loadUserIntegralRecord", method = RequestMethod.POST)
+    // TODO: 是否应该根据用户ID获得相对的记录
     public MyResponse<PageResult<List<UserIntegralRecord>>> loadUserIntegralRecord() {
         UserIntegralDto userIntegralDto = new UserIntegralDto();
         PageHelper.startPage(userIntegralDto.getPageNo(), userIntegralDto.getPageSize());
@@ -132,6 +170,9 @@ public class UserController {
     public MyResponse<PageResult<List<ForumArticleDto>>> loadUserArticle(@RequestBody LoadUserArticleVO vo) {
         ForumArticleDto forumArticleDto = new ForumArticleDto();
 
+        // TODO：需要修改，类型 0:发帖 1:评论过的文章  2:点赞过的文章
+        // 1. 如果是类型 0 发帖，去查询发帖的 forum_article 表
+        // 2. 如果是 1 / 2，再去查 like_record 表
         PageHelper.startPage(forumArticleDto.getPageNo(), forumArticleDto.getPageSize());
 
         List<ForumArticleDto> list = new ArrayList<>();

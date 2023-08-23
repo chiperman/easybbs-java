@@ -47,7 +47,7 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sendEmailCode(String email, Integer type) {
-        if (Constants.ZERO == 0) {
+        if (Constants.ZERO == type) {
             // 在用户表中查询是否存在邮箱，判断用户是否已经注册
             QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("email", email);
