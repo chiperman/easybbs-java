@@ -1,11 +1,11 @@
-package com.easybbs.vo;
+package com.easybbs.dto;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class UserInfoResponseVO {
+public class UserInfoResponseDto {
     /**
      * 用户ID
      */

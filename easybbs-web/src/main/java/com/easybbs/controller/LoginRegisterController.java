@@ -3,6 +3,7 @@ package com.easybbs.controller;
 import com.easybbs.annotation.GlobalInterceptor;
 import com.easybbs.annotation.VerifyParam;
 import com.easybbs.cconst.CheckCode;
+import com.easybbs.cconst.EHttpCode;
 import com.easybbs.cconst.VerifyRegexEnum;
 import com.easybbs.exception.BusinessException;
 import com.easybbs.response.MyResponse;
@@ -10,7 +11,6 @@ import com.easybbs.service.EmailCodeService;
 import com.easybbs.service.UserInfoService;
 import com.easybbs.utils.CreateImageCode;
 import com.easybbs.utils.SetResponseUtils;
-import com.easybbs.utils.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,9 +50,9 @@ public class LoginRegisterController {
         System.out.println(code);
         vCode.write(response.getOutputStream());
     }
-    
-    @GlobalInterceptor(checkParams = true)
+
     @RequestMapping(value = "sendEmailCode")
+    @GlobalInterceptor(checkParams = true)
     public MyResponse<Object> sendEmailCode(HttpSession session, @VerifyParam(required = true) String email,
                                             @VerifyParam(required = true) String checkCode,
                                             @VerifyParam(required = true) Integer type) {
@@ -70,23 +70,39 @@ public class LoginRegisterController {
 
     }
 
-    @GlobalInterceptor(checkParams = true)
     @RequestMapping(value = "/register")
+    @GlobalInterceptor(checkParams = true)
     public MyResponse<Object> register(HttpSession session,
                                        @VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150) String email,
                                        @VerifyParam(required = true) String emailCode,
                                        @VerifyParam(required = true, max = 20) String nickName,
-                                       @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8, max = 18) String password,
+                                       @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8, max =
+                                               18) String password,
                                        @VerifyParam(required = true) String checkCode) {
         try {
             MyResponse<Object> response = new MyResponse<>();
-            if (StringTools.isEmpty(email) || StringTools.isEmpty(emailCode) || StringTools.isEmpty(nickName) || StringTools.isEmpty(password) || StringTools.isEmpty(checkCode)) {
-                throw new BusinessException("请求参数错误");
-            }
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(CheckCode.CHECK_CODE_KEY))) {
-                throw new BusinessException("验证码错误");
+                throw new BusinessException(EHttpCode.CODE_601);
+
             }
             userInfoService.register(email, emailCode, nickName, password);
+            SetResponseUtils.setResponseSuccess(response, null);
+            return response;
+        } finally {
+            session.removeAttribute(CheckCode.CHECK_CODE_KEY);
+        }
+    }
+
+    @RequestMapping(value = "/login")
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<Object> login(HttpSession session, @VerifyParam(required = true) String email,
+                                    @VerifyParam(required = true) String password,
+                                    @VerifyParam(required = true) String checkCode) {
+        try {
+            MyResponse<Object> response = new MyResponse<>();
+            if (!checkCode.equalsIgnoreCase((String) session.getAttribute(CheckCode.CHECK_CODE_KEY))) {
+                throw new BusinessException(EHttpCode.CODE_601);
+            }
             SetResponseUtils.setResponseSuccess(response, null);
             return response;
         } finally {

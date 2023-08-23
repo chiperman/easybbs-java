@@ -1,11 +1,9 @@
 package com.easybbs.service.impl;
 
-import com.easybbs.cconst.ConstNumber;
-import com.easybbs.cconst.EUserStatus;
-import com.easybbs.cconst.UserIntegralChangeTypeEnum;
-import com.easybbs.cconst.UserIntegralOperTypeEnum;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.easybbs.cconst.*;
+import com.easybbs.dto.SessionWebUserDto;
 import com.easybbs.entity.UserInfo;
 import com.easybbs.entity.UserIntegralRecord;
 import com.easybbs.exception.BusinessException;
@@ -13,10 +11,10 @@ import com.easybbs.mapper.UserInfoMapper;
 import com.easybbs.mapper.UserIntegralRecordMapper;
 import com.easybbs.service.EmailCodeService;
 import com.easybbs.service.UserInfoService;
+import com.easybbs.utils.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.easybbs.utils.StringTools;
 
 import java.util.Date;
 
@@ -109,6 +107,24 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         if (count == 0) {
             throw new BusinessException("更新用户积分失败");
         }
+    }
+
+    @Override
+    public SessionWebUserDto login(String email, String password, String ip) {
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("eamil", email);
+        UserInfo userInfo = userInfoMapper.selectOne(queryWrapper);
+
+        if (null == userInfo || !userInfo.getPassword().equals(password)) {
+            throw new BusinessException("账号或者密码错误");
+        }
+
+        if (UserStatusEnum.DISABLE.getStatus().equals(userInfo.getStatus())) {
+            throw new BusinessException("账号已禁用");
+        }
+
+        
+        return null;
     }
 }
 

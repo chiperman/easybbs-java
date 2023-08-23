@@ -1,11 +1,11 @@
-package com.easybbs.vo;
+package com.easybbs.dto;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ForumBoardResponseVO {
+public class ForumBoardDto {
     /**
      * 板块ID
      */
@@ -41,6 +41,6 @@ public class ForumBoardResponseVO {
      */
     private Integer postType;
 
-    private List<ForumBoardResponseVO> children; // 新增的属性
+    private List<ForumBoardDto> children; // 新增的属性
 
 }

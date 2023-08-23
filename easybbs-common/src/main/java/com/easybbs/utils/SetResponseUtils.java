@@ -13,7 +13,7 @@ public class SetResponseUtils {
     }
 
     public static void setResponseFailParam(MyResponse response, Object data) {
-        setResponse(response, EHttpCode.FAIL_Params, data);
+        setResponse(response, EHttpCode.CODE_600, data);
     }
 
 

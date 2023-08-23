@@ -1,7 +1,8 @@
 package com.easybbs.service;
 
-import com.easybbs.cconst.UserIntegralOperTypeEnum;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.easybbs.cconst.UserIntegralOperTypeEnum;
+import com.easybbs.dto.SessionWebUserDto;
 import com.easybbs.entity.UserInfo;
 
 /**
@@ -13,4 +14,6 @@ public interface UserInfoService extends IService<UserInfo> {
     void register(String email, String emailCode, String nickName, String password);
 
     void updateUserIntegral(String userId, UserIntegralOperTypeEnum operTypeEnum, Integer changeType, Integer integral);
+
+    SessionWebUserDto login(String email, String password, String ip);
 }
