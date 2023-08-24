@@ -1,0 +1,28 @@
+2023-08-24 11:12:41.045 INFO  com.easybbs.EasybbsAdminApplication - Starting EasybbsAdminApplication on Xiao-Desktop with PID 3176 (D:\Code\Github\easybbs-java\easybbs-admin\target\classes started by 45083 in D:\Code\Github\easybbs-java)
+2023-08-24 11:12:41.047 INFO  com.easybbs.EasybbsAdminApplication - No active profile set, falling back to default profiles: default
+2023-08-24 11:12:42.009 INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 7071 (http)
+2023-08-24 11:12:42.017 INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-7071"]
+2023-08-24 11:12:42.017 INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-08-24 11:12:42.018 INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.33]
+2023-08-24 11:12:42.110 INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2023-08-24 11:12:42.110 INFO  org.springframework.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 1030 ms
+2023-08-24 11:12:42.736 INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2023-08-24 11:12:42.826 INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'
+2023-08-24 11:12:42.828 INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2023-08-24 11:12:42.835 INFO  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-08-24 15:23:49.159 INFO  com.easybbs.EasybbsAdminApplication - Starting EasybbsAdminApplication on Xiao-Desktop with PID 26872 (D:\Code\Github\easybbs-java\easybbs-admin\target\classes started by 45083 in D:\Code\Github\easybbs-java)
+2023-08-24 15:23:49.169 INFO  com.easybbs.EasybbsAdminApplication - No active profile set, falling back to default profiles: default
+2023-08-24 15:23:49.820 INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 7071 (http)
+2023-08-24 15:23:49.824 INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-7071"]
+2023-08-24 15:23:49.824 INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-08-24 15:23:49.824 INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.33]
+2023-08-24 15:23:49.870 INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2023-08-24 15:23:49.870 INFO  org.springframework.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 677 ms
+2023-08-24 15:23:50.260 INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2023-08-24 15:23:50.340 INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'
+2023-08-24 15:23:50.343 INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2023-08-24 15:23:50.350 INFO  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.

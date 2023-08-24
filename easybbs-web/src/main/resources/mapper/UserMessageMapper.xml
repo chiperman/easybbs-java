@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easybbs.mapper.UserMessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.easybbs.entity.UserMessage">
+            <id property="messageId" column="message_id" jdbcType="INTEGER"/>
+            <result property="receivedUserId" column="received_user_id" jdbcType="BIGINT"/>
+            <result property="articleId" column="article_id" jdbcType="VARCHAR"/>
+            <result property="articleTitle" column="article_title" jdbcType="VARCHAR"/>
+            <result property="commentId" column="comment_id" jdbcType="INTEGER"/>
+            <result property="sendUserId" column="send_user_id" jdbcType="BIGINT"/>
+            <result property="sendNickName" column="send_nick_name" jdbcType="VARCHAR"/>
+            <result property="messageType" column="message_type" jdbcType="TINYINT"/>
+            <result property="messageContent" column="message_content" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        message_id,received_user_id,article_id,
+        article_title,comment_id,send_user_id,
+        send_nick_name,message_type,message_content,
+        status,create_time
+    </sql>
+</mapper>

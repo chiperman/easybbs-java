@@ -47,6 +47,9 @@ public class UserController {
     @Autowired
     LikeRecordMapper likeRecordMapper;
 
+    @Autowired
+    BaseController baseController;
+
 
     /**
      * 获取用户信息
@@ -85,7 +88,6 @@ public class UserController {
     @GlobalInterceptor(checkParams = true)
     public MyResponse<SessionWebUserDto> getUserInfo(HttpSession session) {
         MyResponse<SessionWebUserDto> response = new MyResponse<>();
-        BaseController baseController = new BaseController();
         SessionWebUserDto sessionWebUserDto = baseController.getUserInfoFromSession(session);
         SetResponseUtils.setResponseSuccess(response, sessionWebUserDto);
         return response;

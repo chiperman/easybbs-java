@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.Param;
 public interface ForumArticleMapper extends BaseMapper<ForumArticle> {
     UserArticleCount getUserArticleCount(@Param("userId") Long userId);
 
+    void updateArticleCount(@Param("updateType") Integer updateType, @Param("changeCount") Integer changeCount,
+                            @Param("articleId") String articleId);
 }
 
 
