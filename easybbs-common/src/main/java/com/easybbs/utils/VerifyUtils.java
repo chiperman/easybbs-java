@@ -1,6 +1,6 @@
 package com.easybbs.utils;
 
-import com.easybbs.cconst.VerifyRegexEnum;
+import com.easybbs.enums.VerifyRegexEnum;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -3,6 +3,7 @@ package com.easybbs.cconst;
 public enum EHttpCode {
     SUCCESS(200, "请求成功", "success"),
     FAIL(603, "更新失败", "fail"),
+    CODE_404(404, "请求地址不存在", "error"),
     CODE_600(600, "请求参数错误", "error"),
     CODE_601(601, "验证码错误", "error"),
     CODE_900(900, "Http 请求超时", "error");

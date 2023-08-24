@@ -1,4 +1,4 @@
-package com.easybbs.cconst;
+package com.easybbs.enums;
 
 import lombok.Getter;
 

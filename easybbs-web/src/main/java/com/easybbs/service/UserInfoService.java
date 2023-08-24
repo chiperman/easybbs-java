@@ -1,9 +1,9 @@
 package com.easybbs.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.easybbs.cconst.UserIntegralOperTypeEnum;
 import com.easybbs.dto.SessionWebUserDto;
 import com.easybbs.entity.UserInfo;
+import com.easybbs.enums.UserIntegralOperTypeEnum;
 
 /**
  * @author 45083
