@@ -14,9 +14,9 @@ public enum UserIntegralOperTypeEnum {
     DEL_ARTICLE(7, "文章被删除"),
     DEL_COMMENT(8, "评论被删除");
 
-    private Integer operType;
+    private final Integer operType;
 
-    private String desc;
+    private final String desc;
 
     UserIntegralOperTypeEnum(Integer operType, String desc) {
         this.operType = operType;

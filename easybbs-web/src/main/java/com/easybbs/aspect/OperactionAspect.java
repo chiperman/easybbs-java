@@ -3,6 +3,8 @@ package com.easybbs.aspect;
 import com.alibaba.fastjson.JSON;
 import com.easybbs.annotation.GlobalInterceptor;
 import com.easybbs.annotation.VerifyParam;
+import com.easybbs.cconst.Constants;
+import com.easybbs.cconst.EHttpCode;
 import com.easybbs.exception.BusinessException;
 import com.easybbs.utils.StringTools;
 import com.easybbs.utils.VerifyUtils;
@@ -15,7 +17,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -47,7 +53,7 @@ public class OperactionAspect {
             }
             // 校验登录
             if (interceptor.checkLogin()) {
-
+                checkLogin();
             }
 
             // 校验参数
@@ -66,6 +72,16 @@ public class OperactionAspect {
         } catch (Throwable e) {
             logger.error("全局拦截器异常", e);
             throw new BusinessException("服务器返回错误，请联系管理员");
+        }
+    }
+
+    private void checkLogin() {
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpSession session = request.getSession();
+        Object obj = session.getAttribute(Constants.SESSION_KEY);
+        if (null == obj) {
+            throw new BusinessException(EHttpCode.CODE_901);
         }
     }
 

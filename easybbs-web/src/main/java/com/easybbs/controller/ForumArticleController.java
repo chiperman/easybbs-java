@@ -94,4 +94,16 @@ public class ForumArticleController {
         SetResponseUtils.setResponseSuccess(response, forumArticleDetailVO);
         return response;
     }
+
+
+    @RequestMapping("/doLike")
+    @GlobalInterceptor(checkLogin = true, checkParams = true)
+    public MyResponse<Object> doLike(HttpSession session, @VerifyParam(required = true) String articleId) {
+        MyResponse<Object> response = new MyResponse<>();
+        SessionWebUserDto sessionWebUserDto = baseController.getUserInfoFromSession(session);
+        likeRecordService.doLike(articleId, sessionWebUserDto.getUserId(), sessionWebUserDto.getNickName(),
+                OperRecordOpTypeEnum.ARTICLE_LIKE);
+        SetResponseUtils.setResponseSuccess(response, null);
+        return response;
+    }
 }
