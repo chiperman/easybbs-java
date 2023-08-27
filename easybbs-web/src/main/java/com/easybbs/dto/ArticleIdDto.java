@@ -1,10 +1,10 @@
-package com.easybbs.request;
+package com.easybbs.dto;
 
 import com.easybbs.annotation.VerifyParam;
 import lombok.Data;
 
 @Data
-public class UserIdRequest {
+public class ArticleIdDto {
     @VerifyParam(required = true)
-    private Long userId;
+    private String articleId;
 }
