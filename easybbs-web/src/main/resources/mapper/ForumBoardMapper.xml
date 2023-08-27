@@ -27,7 +27,7 @@
         from forum_board
         where board_id = #{boardId,jdbcType=INTEGER}
     </select>
-    <select id="selectAllBoard" resultType="com.easybbs.dto.ForumBoardDto">
+    <select id="selectAllBoard" resultType="com.easybbs.vo.ForumBoardResponseVO">
         select *
         from forum_board
         order by sort asc

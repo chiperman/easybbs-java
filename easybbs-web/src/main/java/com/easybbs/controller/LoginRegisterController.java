@@ -1,11 +1,9 @@
 package com.easybbs.controller;
 
 import com.easybbs.annotation.GlobalInterceptor;
-import com.easybbs.annotation.VerifyParam;
 import com.easybbs.cconst.Constants;
 import com.easybbs.cconst.EHttpCode;
-import com.easybbs.dto.SessionWebUserDto;
-import com.easybbs.enums.VerifyRegexEnum;
+import com.easybbs.dto.*;
 import com.easybbs.exception.BusinessException;
 import com.easybbs.response.MyResponse;
 import com.easybbs.service.EmailCodeService;
@@ -13,6 +11,7 @@ import com.easybbs.service.UserInfoService;
 import com.easybbs.utils.CreateImageCode;
 import com.easybbs.utils.SetResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,11 +57,12 @@ public class LoginRegisterController {
 
     @RequestMapping(value = "sendEmailCode")
     @GlobalInterceptor(checkParams = true)
-    public MyResponse<Object> sendEmailCode(HttpSession session, @VerifyParam(required = true) String email,
-                                            @VerifyParam(required = true) String checkCode,
-                                            @VerifyParam(required = true) Integer type) {
+    public MyResponse<Object> sendEmailCode(HttpSession session, @RequestBody SendEmailDto sendEmailDto) {
         try {
             MyResponse<Object> response = new MyResponse<>();
+            String email = sendEmailDto.getEmail();
+            String checkCode = sendEmailDto.getCheckCode();
+            Integer type = sendEmailDto.getType();
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException("图片验证码错误");
             }
@@ -77,15 +77,14 @@ public class LoginRegisterController {
 
     @RequestMapping(value = "/register")
     @GlobalInterceptor(checkParams = true)
-    public MyResponse<Object> register(HttpSession session,
-                                       @VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150) String email,
-                                       @VerifyParam(required = true) String emailCode,
-                                       @VerifyParam(required = true, max = 20) String nickName,
-                                       @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8, max =
-                                               18) String password,
-                                       @VerifyParam(required = true) String checkCode) {
+    public MyResponse<Object> register(HttpSession session, @RequestBody RegisterRequestDTO registerRequestDTO) {
         try {
             MyResponse<Object> response = new MyResponse<>();
+            String email = registerRequestDTO.getEmail();
+            String emailCode = registerRequestDTO.getEmailCode();
+            String nickName = registerRequestDTO.getNickName();
+            String password = registerRequestDTO.getPassword();
+            String checkCode = registerRequestDTO.getCheckCode();
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException(EHttpCode.CODE_601);
             }
@@ -99,16 +98,19 @@ public class LoginRegisterController {
 
     @RequestMapping(value = "/login")
     @GlobalInterceptor(checkParams = true)
-    public MyResponse<Object> login(HttpSession session, HttpServletRequest request,
-                                    @VerifyParam(required = true) String email,
-                                    @VerifyParam(required = true) String password,
-                                    @VerifyParam(required = true) String checkCode) {
+    public MyResponse<Object> login(HttpSession session, HttpServletRequest request, @RequestBody LoginDto loginDto) {
         try {
             MyResponse<Object> response = new MyResponse<>();
+
+            String email = loginDto.getEmail();
+            String password = loginDto.getPassword();
+            String checkCode = loginDto.getCheckCode();
+
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException(EHttpCode.CODE_601);
             }
-            SessionWebUserDto sessionWebUserDto = userInfoService.login(email, password,
+            SessionWebUserDto sessionWebUserDto = userInfoService.login(email,
+                    password,
                     baseController.getIpAddr(request));
             session.setAttribute(Constants.SESSION_KEY, sessionWebUserDto);
             SetResponseUtils.setResponseSuccess(response, sessionWebUserDto);
@@ -120,12 +122,14 @@ public class LoginRegisterController {
 
     @RequestMapping(value = "/resetPwd")
     @GlobalInterceptor(checkParams = true)
-    public MyResponse<Object> resetPwd(HttpSession session, @VerifyParam(required = true) String email,
-                                       @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8, max =
-                                               18) String password,
-                                       @VerifyParam(required = true) String checkCode,
-                                       @VerifyParam(required = true) String emailCode) {
+    public MyResponse<Object> resetPwd(HttpSession session, @RequestBody ResetPwdDto resetPwdDto) {
         try {
+
+            String email = resetPwdDto.getEmail();
+            String password = resetPwdDto.getPassword();
+            String checkCode = resetPwdDto.getCheckCode();
+            String emailCode = resetPwdDto.getEmailCode();
+
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException(EHttpCode.CODE_601);
             }
