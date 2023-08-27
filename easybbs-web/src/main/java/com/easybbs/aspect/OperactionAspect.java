@@ -1,6 +1,5 @@
 package com.easybbs.aspect;
 
-import com.alibaba.fastjson.JSON;
 import com.easybbs.annotation.GlobalInterceptor;
 import com.easybbs.annotation.VerifyParam;
 import com.easybbs.cconst.Constants;
@@ -8,7 +7,6 @@ import com.easybbs.cconst.EHttpCode;
 import com.easybbs.exception.BusinessException;
 import com.easybbs.utils.StringTools;
 import com.easybbs.utils.VerifyUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,6 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -31,7 +30,6 @@ import java.lang.reflect.Parameter;
 public class OperactionAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(OperactionAspect.class);
-
 
     private static final String[] TYPE_BASE = {"java.lang.String", "java.lang.INTEGER", "java.lang.Long"};
 
@@ -86,21 +84,24 @@ public class OperactionAspect {
     }
 
     private void validateParams(Method method, Object[] arguments) {
-        Parameter[] parameters = method.getParameters();
-        for (int i = 0; i < parameters.length; i++) {
-            Parameter parameter = parameters[i];
-            Object value = arguments[i];
-            VerifyParam verifyParam = parameter.getAnnotation(VerifyParam.class);
-            if (verifyParam == null) {
-                continue;
-            }
-            if (ArrayUtils.contains(TYPE_BASE, parameter.getParameterizedType().getTypeName())) {
-                checkValue(value, verifyParam);
-            } else {
+        for (Object argument : arguments) {
+            validateObject(argument);
+        }
+    }
 
+    private void validateObject(Object obj) {
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(VerifyParam.class)) {
+                field.setAccessible(true);
+                try {
+                    Object value = field.get(obj);
+                    VerifyParam verifyParam = field.getAnnotation(VerifyParam.class);
+                    checkValue(value, verifyParam);
+                } catch (IllegalAccessException e) {
+                    logger.error("校验对象属性异常", e);
+                }
             }
-
-            logger.info(JSON.toJSONString(value));
         }
     }
 
@@ -131,7 +132,8 @@ public class OperactionAspect {
         /**
          * 校验正则
          */
-        if (!isEmpty && !StringTools.isEmpty(verifyParam.regex().getRegex()) && !VerifyUtils.verify(verifyParam.regex(), String.valueOf(value))) {
+        if (!isEmpty && !StringTools.isEmpty(verifyParam.regex().getRegex()) && !VerifyUtils.verify(verifyParam.regex(),
+                String.valueOf(value))) {
             throw new BusinessException("请求参数错误");
         }
     }

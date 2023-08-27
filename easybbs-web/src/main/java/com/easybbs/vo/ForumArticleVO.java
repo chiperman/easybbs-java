@@ -1,11 +1,12 @@
 package com.easybbs.vo;
 
+import com.easybbs.request.BasePageQuery;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class ForumArticleVO {
+public class ForumArticleVO extends BasePageQuery {
     private String articleId;
     private Integer boardId;
     private String boardName;

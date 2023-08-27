@@ -2,7 +2,10 @@ package com.easybbs.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.easybbs.annotation.GlobalInterceptor;
-import com.easybbs.dto.*;
+import com.easybbs.dto.LoadUserArticleDto;
+import com.easybbs.dto.SessionWebUserDto;
+import com.easybbs.dto.UserArticleCount;
+import com.easybbs.dto.UserIntegralDto;
 import com.easybbs.entity.ForumArticle;
 import com.easybbs.entity.LikeRecord;
 import com.easybbs.entity.UserInfo;
@@ -16,7 +19,8 @@ import com.easybbs.service.UserInfoService;
 import com.easybbs.service.UserIntegralRecordService;
 import com.easybbs.utils.SetPageUtils;
 import com.easybbs.utils.SetResponseUtils;
-import com.easybbs.vo.LoadUserArticleVO;
+import com.easybbs.vo.ForumArticleVO;
+import com.easybbs.vo.UserInfoResponseVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
@@ -59,21 +63,22 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
-    public MyResponse<UserInfoResponseDto> getUserInfo(@RequestBody UserIdRequest userIdRequest) {
-        MyResponse<UserInfoResponseDto> response = new MyResponse<>();
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<UserInfoResponseVO> getUserInfo(@RequestBody UserIdRequest userIdRequest) {
+        MyResponse<UserInfoResponseVO> response = new MyResponse<>();
         Long userId = userIdRequest.getUserId();
-        UserInfoResponseDto userInfoResponseDto = new UserInfoResponseDto();
+        UserInfoResponseVO userInfoResponseVO = new UserInfoResponseVO();
         // 根据 userId 获得用户信息
         UserInfo userInfo = getUserInfo(userId);
 
         // 将 userInfo 复制到 userInfoResponseVO
-        BeanUtils.copyProperties(userInfo, userInfoResponseDto);
+        BeanUtils.copyProperties(userInfo, userInfoResponseVO);
 
         UserArticleCount userArticleCount = getUserArticleCount(userId);
-        userInfoResponseDto.setPostCount(userArticleCount.getPostCount());
-        userInfoResponseDto.setLikeCount(userArticleCount.getLikeCount());
+        userInfoResponseVO.setPostCount(userArticleCount.getPostCount());
+        userInfoResponseVO.setLikeCount(userArticleCount.getLikeCount());
 
-        SetResponseUtils.setResponseSuccess(response, userInfoResponseDto);
+        SetResponseUtils.setResponseSuccess(response, userInfoResponseVO);
         return response;
     }
 
@@ -163,30 +168,30 @@ public class UserController {
      * 2. 遍历 List 找到 object_id 然后再去 forum_article 找到对应的文章
      * 3. 存入最后的结果中
      *
-     * @param vo
+     * @param dto
      *
      * @return
      */
-
     @RequestMapping(value = "/loadUserArticle", method = RequestMethod.POST)
-    public MyResponse<PageResult<List<ForumArticleDto>>> loadUserArticle(@RequestBody LoadUserArticleVO vo) {
-        ForumArticleDto forumArticleDto = new ForumArticleDto();
+    @GlobalInterceptor(checkParams = true)
+    public MyResponse<PageResult<List<ForumArticleVO>>> loadUserArticle(@RequestBody LoadUserArticleDto dto) {
+        ForumArticleVO forumArticleVO = new ForumArticleVO();
 
         // TODO：需要修改，类型 0:发帖 1:评论过的文章  2:点赞过的文章
         // 1. 如果是类型 0 发帖，去查询发帖的 forum_article 表
         // 2. 如果是 1 / 2，再去查 like_record 表
-        PageHelper.startPage(forumArticleDto.getPageNo(), forumArticleDto.getPageSize());
+        PageHelper.startPage(forumArticleVO.getPageNo(), forumArticleVO.getPageSize());
 
-        List<ForumArticleDto> list = new ArrayList<>();
+        List<ForumArticleVO> list = new ArrayList<>();
 
         Collections.sort(list, (article1, article2) -> article2.getPostTime().compareTo(article1.getPostTime()));
 
-        PageInfo<ForumArticleDto> page = new PageInfo<>(list);
-        PageResult<List<ForumArticleDto>> result = new PageResult<>();
+        PageInfo<ForumArticleVO> page = new PageInfo<>(list);
+        PageResult<List<ForumArticleVO>> result = new PageResult<>();
 
         // 1.先根据 vo 里面的 userId 和 type 到 like_record 找到对应的数据 List
-        Long userId = vo.getUserId();
-        int type = vo.getType();
+        Long userId = dto.getUserId();
+        int type = dto.getType();
 
         QueryWrapper<LikeRecord> queryWrapper = new QueryWrapper<>();
 
@@ -195,13 +200,13 @@ public class UserController {
         for (LikeRecord record : likeRecords) {
             // 2. 遍历 List 找到 object_id 然后再去 forum_article 找到对应的文章
             ForumArticle article = forumArticleMapper.selectById(record.getObjectId());
-            ForumArticleDto articleDto = new ForumArticleDto(); // 创建新的实例
-            BeanUtils.copyProperties(article, articleDto);
-            list.add(articleDto);
+            ForumArticleVO articleVO = new ForumArticleVO(); // 创建新的实例
+            BeanUtils.copyProperties(article, articleVO);
+            list.add(articleVO);
         }
 
         SetPageUtils.setPageResult(page, result);
-        MyResponse<PageResult<List<ForumArticleDto>>> response = new MyResponse<>();
+        MyResponse<PageResult<List<ForumArticleVO>>> response = new MyResponse<>();
         SetResponseUtils.setResponseSuccess(response, result);
 
         return response;
