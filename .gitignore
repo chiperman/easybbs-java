@@ -6,6 +6,8 @@ target/
 ### log
 log.path_IS_UNDEFINED
 
+logs
+
 ### IntelliJ IDEA ###
 .idea
 .idea/modules.xml

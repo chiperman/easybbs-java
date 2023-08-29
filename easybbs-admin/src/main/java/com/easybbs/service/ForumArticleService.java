@@ -18,6 +18,8 @@ public interface ForumArticleService extends IService<ForumArticle> {
 
     PageResult<ArticleCommentDto> getArticleComments(ArticleQueryVo vo);
 
+    PageResult<ArticleCommentDto> getComment(ArticleQueryVo vo);
+
     Boolean updateArticlesBoard(ArticleBoardVo vo);
 
 }

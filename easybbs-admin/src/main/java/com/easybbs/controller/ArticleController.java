@@ -95,6 +95,17 @@ public class ArticleController {
         return response;
     }
 
+    @RequestMapping("/loadComment")
+    public MyResponse<PageResult<ArticleCommentDto>> loadComment(@RequestBody ArticleQueryVo vo) {
+        MyResponse<PageResult<ArticleCommentDto>> response = new MyResponse<>();
+
+        PageResult<ArticleCommentDto> result = articleService.getArticleComments(vo);
+        setResponseSuccess(response);
+        response.setData(result);
+        return response;
+    }
+
+
     @RequestMapping("/delComment")
     public MyResponse delComment(@Validated(ArticleQueryVo.DelComment.class) @RequestBody ArticleQueryVo vo) {
         boolean result = commentService.removeById(vo.getCommentId());

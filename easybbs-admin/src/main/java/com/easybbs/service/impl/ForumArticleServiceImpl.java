@@ -10,6 +10,7 @@ import com.easybbs.entity.ForumComment;
 import com.easybbs.mapper.ForumCommentMapper;
 import com.easybbs.service.ForumArticleService;
 import com.easybbs.mapper.ForumArticleMapper;
+import com.easybbs.utils.SetPageUtils;
 import com.easybbs.vo.ArticleBoardVo;
 import com.easybbs.vo.ArticleQueryVo;
 import org.apache.commons.lang3.StringUtils;
@@ -85,6 +86,30 @@ public class ForumArticleServiceImpl extends ServiceImpl<ForumArticleMapper, For
         result.setPageTotal(page.getPages());
         result.setTotalCount(page.getTotal());
         return result;
+    }
+
+    @Override
+    public PageResult<ArticleCommentDto> getComment(ArticleQueryVo vo) {
+        QueryWrapper<ForumComment> wrapper = new QueryWrapper<>();
+        if (!StringUtils.isBlank(vo.getContentFuzzy())) {
+            wrapper.likeRight("content", vo.getContentFuzzy());
+        }
+        if (!StringUtils.isBlank(vo.getNickNameFuzzy())) {
+            wrapper.likeRight("nick_name", vo.getNickNameFuzzy());
+        }
+        wrapper.eq("status", vo.getStatus());
+
+        Page<ForumComment> page = new Page<>();
+        forumCommentMapper.selectPage(page, wrapper);
+
+        PageResult<ArticleCommentDto> pageResult = new PageResult<>();
+        List<ArticleCommentDto> results = page.getRecords().stream().map(entity -> {
+            ArticleCommentDto dto = new ArticleCommentDto();
+            BeanUtils.copyProperties(entity, dto);
+            return dto;
+        }).collect(Collectors.toList());
+        SetPageUtils.setPlusPageResult(vo.getPageNo(), results, page, pageResult);
+        return pageResult;
     }
 
     @Override

@@ -14,6 +14,7 @@ public class ArticleQueryVo extends BasePageQuery {
     private Integer commentId;
     private String titleFuzzy;
     private String nickNameFuzzy;
+    private String contentFuzzy;
     private Integer attachmentType;
     private Integer status;
     @NotNull(groups = {TopArticle.class}, message = "topType不能为空")

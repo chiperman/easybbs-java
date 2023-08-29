@@ -26,7 +26,7 @@ public class ApiLogAspect {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        String ip = Objects.isNull(request.getHeader("X-Real-Ip")) ? request.getRemoteAddr() : request.getHeader("X-Real-Ip");
+        String ip = Objects.isNull(request.getHeader("X-Real-IP")) ? request.getRemoteAddr() : request.getHeader("X-Real-IP");
         log.info("startTime:{}, url:{}, method:{}, ip:{}, args:[{}]", sdf.format(System.currentTimeMillis()),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getMethod(), ip,
