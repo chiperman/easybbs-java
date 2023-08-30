@@ -39,4 +39,20 @@
         comment_count,top_type,attachment_type,
         status
     </sql>
+
+    <update id="updateArticleCount">
+        update forum_article
+        <set>
+            <if test="updateType==0">
+                read_count= read_count+#{changeCount}
+            </if>
+            <if test="updateType==1">
+                good_count= good_count+#{changeCount}
+            </if>
+            <if test="updateType==2">
+                comment_count= comment_count+#{changeCount}
+            </if>
+            where article_id = #{articleId}
+        </set>
+    </update>
 </mapper>

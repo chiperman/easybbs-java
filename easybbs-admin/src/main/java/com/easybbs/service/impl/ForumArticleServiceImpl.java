@@ -1,12 +1,17 @@
 package com.easybbs.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.easybbs.cconst.EHttpCode;
 import com.easybbs.dto.ArticleCommentDto;
 import com.easybbs.entity.ForumArticle;
 import com.easybbs.entity.ForumComment;
+import com.easybbs.enums.UpdateArticleCountTypeEnum;
+import com.easybbs.enums.UserIntegralChangeTypeEnum;
+import com.easybbs.exception.BusinessException;
 import com.easybbs.mapper.ForumCommentMapper;
 import com.easybbs.service.ForumArticleService;
 import com.easybbs.mapper.ForumArticleMapper;
@@ -120,6 +125,30 @@ public class ForumArticleServiceImpl extends ServiceImpl<ForumArticleMapper, For
         wrapper.set("p_board_id", vo.getPboardId());
         int result = forumArticleMapper.update(null, wrapper);
         return result == 1;
+    }
+
+    @Override
+    public ForumArticle readArticle(String articleId) {
+        ForumArticle forumArticle = forumArticleMapper.selectById(articleId);
+        if (null == forumArticle) {
+            throw new BusinessException(EHttpCode.CODE_404);
+        }
+
+        // 需要文章已经审核 status = 1
+        if (forumArticle.getStatus().equals(1)) {
+//            LambdaUpdateWrapper<ForumArticle> updateWrapper = new LambdaUpdateWrapper<>();
+//            updateWrapper.eq(ForumArticle::getArticleId, articleId).setSql("read_count = read_count + 1");
+//            forumArticleMapper.update(null, updateWrapper);
+            forumArticleMapper.updateArticleCount(UpdateArticleCountTypeEnum.GOOD_COUNT.getType(),
+                    UserIntegralChangeTypeEnum.REDUCE.getChangeType(),
+                    articleId);
+        }
+
+        return forumArticle;
+    }
+
+    private void updateArticleCount() {
+
     }
 
     private void setChildComment(List<ArticleCommentDto> comments) {

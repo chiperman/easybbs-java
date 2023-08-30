@@ -1,14 +1,25 @@
 package com.easybbs.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.easybbs.annotation.GlobalInterceptor;
+import com.easybbs.cconst.Constants;
 import com.easybbs.cconst.EHttpCode;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.easybbs.dto.ArticleCommentDto;
+import com.easybbs.dto.*;
 import com.easybbs.entity.ForumArticle;
+import com.easybbs.entity.ForumArticleAttachment;
+import com.easybbs.entity.LikeRecord;
+import com.easybbs.enums.OperRecordOpTypeEnum;
+import com.easybbs.exception.BusinessException;
+import com.easybbs.service.ForumArticleAttachmentService;
 import com.easybbs.service.ForumArticleService;
 import com.easybbs.service.ForumCommentService;
+import com.easybbs.service.LikeRecordService;
+import com.easybbs.utils.SetResponseUtils;
 import com.easybbs.vo.ArticleBoardVo;
 import com.easybbs.vo.ArticleQueryVo;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.easybbs.response.MyResponse;
 import com.easybbs.response.PageResult;
 
+import javax.servlet.http.HttpSession;
+import java.util.List;
+
 @RestController
 @RequestMapping("/forum")
 public class ArticleController {
@@ -24,6 +38,10 @@ public class ArticleController {
     private ForumArticleService articleService;
     @Autowired
     private ForumCommentService commentService;
+    @Autowired
+    private ForumArticleAttachmentService articleAttachmentService;
+    @Autowired
+    private LikeRecordService likeRecordService;
 
     @RequestMapping("/loadArticle")
     public MyResponse<PageResult<ForumArticle>> getArticle(@RequestBody ArticleQueryVo vo) {
@@ -31,6 +49,69 @@ public class ArticleController {
         MyResponse<PageResult<ForumArticle>> response = new MyResponse<>();
         setResponseSuccess(response);
         response.setData(result);
+        return response;
+    }
+
+    @RequestMapping("/getArticleDetail")
+    public MyResponse<ForumArticleDetailDto> getArticleDetail(HttpSession session,
+                                                              @Validated(ArticleQueryVo.GetArticleDetail.class)
+                                                              @RequestBody ArticleQueryVo vo) {
+        MyResponse<ForumArticleDetailDto> response = new MyResponse<>();
+        String articleId = vo.getArticleId();
+        ForumArticle forumArticle = articleService.readArticle(articleId);
+
+        SessionWebUserDto sessionWebUserDto = (SessionWebUserDto) session.getAttribute(Constants.SESSION_KEY);
+
+        Boolean canShowNoAudit = sessionWebUserDto != null && sessionWebUserDto.getUserId()
+                .equals(forumArticle.getUserId()) || sessionWebUserDto.getIsAdmin();
+
+        if (null == forumArticle || (forumArticle.getStatus().equals(1) && !canShowNoAudit) || forumArticle.getStatus()
+                .equals(-1)) {
+            throw new BusinessException(EHttpCode.CODE_404);
+        }
+
+        ForumArticleDetailDto articleDetail = new ForumArticleDetailDto();
+        ForumArticleDto article = new ForumArticleDto();
+
+        BeanUtils.copyProperties(forumArticle, article);
+        articleDetail.setForumArticle(article);
+
+        // 有附件
+        if (forumArticle.getAttachmentType().equals(1)) {
+            ForumArticleAttachment attachment = articleAttachmentService.getAttachmentByArticleId(vo.getArticleId());
+            ForumArticleAttachmentDto attachmentDto = new ForumArticleAttachmentDto();
+            BeanUtils.copyProperties(attachment, attachmentDto);
+            articleDetail.setAttachment(attachmentDto);
+        }
+
+        // 是否已经点赞
+        if (sessionWebUserDto != null) {
+            QueryWrapper<LikeRecord> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("object_id", articleId)
+                    .eq("user_id", sessionWebUserDto.getUserId())
+                    .eq("op_type", OperRecordOpTypeEnum.ARTICLE_LIKE.getType());
+            LikeRecord likeRecord = likeRecordService.getOne(queryWrapper);
+            if (null != likeRecord) {
+                articleDetail.setHaveLike(true);
+            }
+        }
+
+        SetResponseUtils.setResponseSuccess(response, articleDetail);
+        return response;
+    }
+
+    @RequestMapping("/doLike")
+    public MyResponse<Object> doLike(HttpSession session,
+                                     @Validated(ArticleQueryVo.DoLike.class)
+                                     @RequestBody ArticleQueryVo vo) {
+        MyResponse<Object> response = new MyResponse<>();
+        SessionWebUserDto sessionWebUserDto = (SessionWebUserDto) session.getAttribute(Constants.SESSION_KEY);
+        String articleId = vo.getArticleId();
+        likeRecordService.doLike(articleId,
+                sessionWebUserDto.getUserId(),
+                sessionWebUserDto.getNickName(),
+                OperRecordOpTypeEnum.ARTICLE_LIKE);
+        SetResponseUtils.setResponseSuccess(response, null);
         return response;
     }
 

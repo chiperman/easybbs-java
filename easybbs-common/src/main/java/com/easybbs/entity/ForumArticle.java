@@ -1,6 +1,5 @@
 package com.easybbs.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -44,7 +43,7 @@ public class ForumArticle implements Serializable {
     /**
      * 用户ID
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 昵称

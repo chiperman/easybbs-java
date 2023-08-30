@@ -22,4 +22,6 @@ public interface ForumArticleService extends IService<ForumArticle> {
 
     Boolean updateArticlesBoard(ArticleBoardVo vo);
 
+    ForumArticle readArticle(String articleId);
+
 }

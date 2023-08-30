@@ -8,7 +8,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ArticleQueryVo extends BasePageQuery {
-    @NotBlank(groups = {DeleteArticle.class, TopArticle.class, DelComment.class}, message = "articleId不能为空")
+    @NotBlank(groups = {DeleteArticle.class, TopArticle.class, DelComment.class, GetArticleDetail.class},
+            message = "articleId不能为空")
     private String articleId;
     @NotNull(groups = {DelComment.class}, message = "commentId不能为空")
     private Integer commentId;
@@ -25,4 +26,8 @@ public class ArticleQueryVo extends BasePageQuery {
     public @interface TopArticle {}
 
     public @interface DelComment {}
+
+    public @interface GetArticleDetail {}
+
+    public @interface DoLike {}
 }
