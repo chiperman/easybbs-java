@@ -5,15 +5,15 @@
 <mapper namespace="com.easybbs.mapper.ForumArticleAttachmentMapper">
 
     <resultMap id="BaseResultMap" type="com.easybbs.entity.ForumArticleAttachment">
-            <id property="fileId" column="file_id" jdbcType="VARCHAR"/>
-            <result property="articleId" column="article_id" jdbcType="VARCHAR"/>
-            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
-            <result property="fileSize" column="file_size" jdbcType="BIGINT"/>
-            <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
-            <result property="downloadCount" column="download_count" jdbcType="INTEGER"/>
-            <result property="filePath" column="file_path" jdbcType="VARCHAR"/>
-            <result property="fileType" column="file_type" jdbcType="TINYINT"/>
-            <result property="integral" column="integral" jdbcType="INTEGER"/>
+        <id property="fileId" column="file_id" jdbcType="VARCHAR"/>
+        <result property="articleId" column="article_id" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="fileSize" column="file_size" jdbcType="BIGINT"/>
+        <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
+        <result property="downloadCount" column="download_count" jdbcType="INTEGER"/>
+        <result property="filePath" column="file_path" jdbcType="VARCHAR"/>
+        <result property="fileType" column="file_type" jdbcType="TINYINT"/>
+        <result property="integral" column="integral" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -21,4 +21,9 @@
         file_size,file_name,download_count,
         file_path,file_type,integral
     </sql>
+    <update id="updateDownloadCount">
+        update forum_article_attachment
+        set download_count = download_count + 1
+        where file_id = #{fileId}
+    </update>
 </mapper>

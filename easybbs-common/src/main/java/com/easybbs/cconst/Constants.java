@@ -12,4 +12,8 @@ public class Constants {
     public static final String NO_ADDRESS = "未知";
 
     public static final String SESSION_KEY = "session_key";
+
+    public static final String FILE_FOLDER_FILE = "/file/";
+
+    public static final String FILE_FOLDER_ATTACHMENT = "attachment/";
 }

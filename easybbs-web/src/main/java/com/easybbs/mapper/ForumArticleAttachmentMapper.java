@@ -3,6 +3,7 @@ package com.easybbs.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.easybbs.entity.ForumArticleAttachment;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author 45083
@@ -13,6 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ForumArticleAttachmentMapper extends BaseMapper<ForumArticleAttachment> {
 
+    void updateDownloadCount(@Param("fileId") String fileId);
 }
 
 

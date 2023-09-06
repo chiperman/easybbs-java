@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easybbs.mapper.ForumArticleAttachmentDownloadMapper">
+
+    <resultMap id="BaseResultMap" type="com.easybbs.entity.ForumArticleAttachmentDownload">
+        <id property="fileId" column="file_id" jdbcType="VARCHAR"/>
+        <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="articleId" column="article_id" jdbcType="VARCHAR"/>
+        <result property="downloadCount" column="download_count" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        file_id,user_id,article_id,
+        download_count
+    </sql>
+    <insert id="insertOrUpdate" parameterType="com.easybbs.entity.ForumArticleAttachmentDownload">
+        INSERT INTO forum_article_attachment_download
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileId != null">
+                file_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="articleId != null">
+                article_id,
+            </if>
+            <if test="downloadCount != null">
+                download_count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileId!=null">
+                #{fileId},
+            </if>
+            <if test="userId!=null">
+                #{user_id},
+            </if>
+            <if test="articleId!=null">
+                #{article_id},
+            </if>
+            <if test="downloadCount!=null">
+                #{download_count},
+            </if>
+        </trim>
+        on DUPLICATE KEY update
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="fileId!=null">
+                file_id= VALUES(file_id);
+            </if>
+            <if test="userId!=null">
+                user_id= VALUES(user_id);
+            </if>
+            <if test="articleId!=null">
+                article_id= VALUES(article_id);
+            </if>
+            <if test="downloadCount!=null">
+                download_count= download_count+1;
+            </if>
+        </trim>
+    </insert>
+</mapper>
